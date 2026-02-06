@@ -1,0 +1,241 @@
+[
+  {
+    "id": "block-print",
+    "title": "Block Print",
+    "subtitle": "The Graceful Dance of Wood and Dye",
+    "description1": "Using meticulously hand-carved wooden blocks, our master artisans create intricate patterns one precise impression at a time.",
+    "description2": "This distinguished technique, dating back over 3,000 years, requires perfect precision and graceful, rhythmic movement.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Design lovingly carved on finest teakwood blocks",
+      "Natural dye carefully prepared with expertise",
+      "Precise hand-stamping on premium fabric",
+      "Expert fixing and gentle washing"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "2-3 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "500+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique1.png",
+      "/images/techniques/technique2.png"
+    ]
+  },
+  {
+    "id": "dabu-print",
+    "title": "Dabu Print",
+    "subtitle": "The Ancient Art of Resist Dyeing",
+    "description1": "Dabu printing is a treasured resist-dyeing technique originating from Rajasthan, where artisans use natural clay paste to create stunning patterns.",
+    "description2": "This centuries-old method produces distinctive, organic designs with beautiful depth and character.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Natural clay paste (dabu) carefully prepared with gum and lime",
+      "Paste lovingly applied through hand-carved wooden blocks",
+      "Fabric gently dried in sunlight",
+      "Natural dye bath immersion creating resist patterns",
+      "Clay paste thoughtfully removed, revealing exquisite designs",
+      "Multiple dyeing layers for complex, rich patterns"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "2-3 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "500+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique3.png",
+      "/images/techniques/technique4.png"
+    ]
+  },
+  {
+    "id": "screen-print",
+    "title": "Screen Print",
+    "subtitle": "Precision Meets Artistic Expression",
+    "description1": "Screen printing allows our skilled artisans to create beautifully consistent patterns with remarkable detail.",
+    "description2": "While more modern than block printing, this technique still requires expert craftsmanship and an artist's discerning eye.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Design carefully transferred to fine mesh screens",
+      "Screens meticulously prepared with precision",
+      "Fabric positioned with exacting care",
+      "Dye expertly applied through screens using squeegees",
+      "Each color layer individually printed and dried",
+      "Quality inspection ensuring flawless results"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "1-2 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "300+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique5.png",
+      "/images/techniques/technique6.jpg"
+    ]
+  },
+  {
+    "id": "digital-print",
+    "title": "Digital Print",
+    "subtitle": "Modern Technology, Timeless Quality",
+    "description1": "Digital printing brings contemporary design possibilities to traditional Indian textiles. While technology assisted, each piece is carefully monitored by our experienced artisans to ensure exceptional quality and color vibrancy.",
+    "description2": "",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Designs thoughtfully created or adapted digitally",
+      "Premium fabric carefully prepared for optimal ink absorption",
+      "Eco-friendly, AZO-free digital inks selected",
+      "Printing expertly supervised for color accuracy",
+      "Heat-setting process ensuring lasting vibrancy",
+      "Thorough quality inspection by experienced artisans"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "1 day per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "200+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique7.jpg",
+      "/images/techniques/technique8.jpg"
+    ]
+  },
+  {
+    "id": "chikan-embroidery",
+    "title": "Chikan Embroidery",
+    "subtitle": "The Poetry of White-on-White Elegance",
+    "description1": "Chikan embroidery is one of India's most celebrated and delicate embroidery forms, originating from Lucknow.",
+    "description2": "This exquisite hand-embroidery technique creates ethereal, lace-like patterns that speak of grace and refinement.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Design delicately traced on finest fabric",
+      "Multiple traditional stitches lovingly employed (bakhiya, tepchi, murri, phanda)",
+      "Each stitch carefully placed by skilled hands",
+      "Intricate motifs gradually taking shape",
+      "Final washing revealing the full beauty",
+      "Gentle pressing preserving the delicate work"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "7-21 days per distinguished piece (depending on intricacy)" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "600+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique9.jpg",
+      "/images/techniques/technique10.jpg"
+    ]
+  },
+  {
+    "id": "chikan-comp",
+    "title": "Chikan Embroidery (Computerized)",
+    "subtitle": "Traditional Artistry Enhanced by Modern Precision",
+    "description1": "Computerized Chikan embroidery honors traditional patterns while employing modern technology for consistency.",
+    "description2": "Our artisans carefully program and supervise each piece, ensuring the soulful beauty of Chikan remains intact.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Traditional Chikan patterns thoughtfully digitized",
+      "Premium fabric carefully prepared and positioned",
+      "Computerized embroidery expertly supervised by trained artisans",
+      "Multiple passes creating layered depth",
+      "Hand-finishing touches added by skilled artisans",
+      "Thorough quality inspection ensuring authentic appearance"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "2-4 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "250+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique11.jpg",
+      "/images/techniques/technique12.jpg"
+    ]
+  },
+  {
+    "id": "machine-embroidery",
+    "title": "Machine Embroidery",
+    "subtitle": "Precision Craftsmanship at Scale",
+    "description1": "Machine embroidery allows us to create intricate, consistent patterns while maintaining our commitment to quality and artisan involvement.",
+    "description2": "Each piece is carefully monitored and finished by skilled craftspeople.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Designs carefully created with artistic vision",
+      "Fabric thoughtfully prepared and stabilized",
+      "Premium threads selected for color and durability",
+      "Embroidery process expertly monitored by trained operators",
+      "Hand-finishing and thread trimming by skilled artisans",
+      "Comprehensive quality inspection"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "1-2 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "400+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique13.jpg",
+      "/images/techniques/technique14.png"
+    ]
+  },
+  {
+    "id": "machine-embroidery-comp",
+    "title": "Machine Embroidery (Computerized)",
+    "subtitle": "Digital Precision Guided by Artisan Expertise",
+    "description1": "Computerized machine embroidery represents the perfect marriage of traditional design sensibility and modern precision.",
+    "description2": "Our artisans carefully program, monitor, and finish each piece with expert care.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Traditional Indian motifs thoughtfully digitized",
+      "Advanced programming ensuring pattern integrity",
+      "Premium fabric precisely positioned in embroidery frames",
+      "Computerized stitching expertly supervised",
+      "Artisan hand-finishing adding human touch",
+      "Rigorous quality control by experienced craftspeople"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "1-2 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "300+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique15.jpg",
+      "/images/techniques/technique16.jpg"
+    ]
+  },
+  {
+    "id": "hand-work",
+    "title": "Hand work (Gaderi / Kantha)",
+    "subtitle": "The Meditative Art of Running Stitch Storytelling",
+    "description1": "Kantha embroidery is a cherished folk art tradition, particularly treasured in Bengal and neighboring regions.",
+    "description2": "This beautiful running stitch technique transforms simple fabric into textured masterpieces, each stitch a meditation.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Fabric layers carefully aligned and prepared",
+      "Designs lightly traced as gentle guides",
+      "Simple running stitches lovingly worked across entire surface",
+      "Patterns gradually emerging through rhythmic stitching",
+      "Multiple thread colors creating subtle dimension",
+      "Natural rippling texture developing organically"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "10-30 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "450+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique17.jpg",
+      "/images/techniques/technique18.jpg"
+    ]
+  },
+  {
+    "id": "applique-work",
+    "title": "Applique work",
+    "subtitle": "Layered Artistry in Fabric and Thread",
+    "description1": "Appliqué work is the elegant art of layering fabric pieces onto a base textile, creating dimensional designs with remarkable visual impact.",
+    "description2": "This technique combines cutting, positioning, and stitching expertise.",
+    "processTitle": "Our Meticulous Process",
+    "checklist": [
+      "Design patterns carefully created and planned",
+      "Fabric pieces precisely cut in desired shapes",
+      "Base fabric thoughtfully prepared",
+      "Cut pieces strategically positioned and pinned",
+      "Edges expertly stitched (by hand or machine)",
+      "Additional embroidery embellishments added",
+      "Final pressing and finishing touches"
+    ],
+    "stats": [
+      { "icon": "time", "label": "Time Investment", "value": "3-8 days per distinguished piece" },
+      { "icon": "artisans", "label": "Master Artisans", "value": "350+ Specializing" }
+    ],
+    "images": [
+      "/images/techniques/technique19.jpg",
+      "/images/techniques/technique20.jpg"
+    ]
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "category": "block-print",
+    "season": "winter",
+    "name": "wow - Red Floral",
+    "pattern": "Printed",
+    "material": "100% Cotton",
+    "size": "44\"X44\"",
+    "technique": "Hand Block Printed",
+    "feature": "Handmade",
+    "style": "Bohemian",
+    "shape": "Square",
+    "closureType": "Hidden Zipper",
+    "placeOfOrigin": "Rajasthan, India",
+    "brandName": "Malani Impex Inc",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    "images": [
+      "/images/seasons/seasonsP1.png",
+      "/images/seasons/seasonsP1 - Copy.png",
+      "/images/seasons/seasonsP1 - Copy (2).png"
+    ]
+  },
+  {
+    "id": 2,
+    "category": "block-print",
+    "season": "winter",
+    "name": "mehnga - Indigo Blossom",
+    "pattern": "Printed",
+    "material": "100% Cotton",
+    "size": "18\"X18\"",
+    "technique": "Hand Block Printed",
+    "feature": "Handmade",
+    "style": "Bohemian",
+    "shape": "Square",
+    "closureType": "Hidden Zipper",
+    "placeOfOrigin": "Rajasthan, India",
+    "brandName": "Malani Impex Inc",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    "images": [
+     "/images/seasons/seasonsP1.png",
+      "/images/seasons/seasonsP1 - Copy.png",
+      "/images/seasons/seasonsP1 - Copy (2).png"
+    ]
+  },
+  {
+    "id": 3,
+    "category": "block-print",
+    "season": "winter",
+    "name": "sasta- Mustard Vine",
+    "pattern": "Printed",
+    "material": "100% Cotton",
+    "size": "18\"X18\"",
+    "technique": "Hand Block Printed",
+    "feature": "Handmade",
+    "style": "Bohemian",
+    "shape": "Square",
+    "closureType": "Hidden Zipper",
+    "placeOfOrigin": "Rajasthan, India",
+    "brandName": "Malani Impex Inc",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.arm interiors.",
+    "images": [
+      "/images/seasons/seasonsP1.png",
+      "/images/seasons/seasonsP1 - Copy.png",
+      "/images/seasons/seasonsP1 - Copy (2).png"
+    ]
+  },
+  {
+    "id": 4,
+    "category": "block-print",
+    "season": "winter",
+    "name": "badiya - Blue Paisley",
+    "pattern": "Printed",
+    "material": "100% Cotton",
+    "size": "18\"X18\"",
+    "technique": "Dabu Mud Resist Print",
+    "feature": "Handmade",
+    "style": "Bohemian",
+    "shape": "Square",
+    "closureType": "Hidden Zipper",
+    "placeOfOrigin": "Rajasthan, India",
+    "brandName": "Malani Impex Inc",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.mud-resist technique.",
+    "images": [
+     "/images/seasons/seasonsP1.png",
+      "/images/seasons/seasonsP1 - Copy.png",
+      "/images/seasons/seasonsP1 - Copy (2).png"
+    ]
+  },
+  {
+    "id": 5,
+    "category": "dabu-print",
+    "season": "summer",
+    "name": "Boho Cushion Cover - Charcoal Motif",
+    "pattern": "Printed",
+    "material": "100% Cotton",
+    "size": "18\"X18\"",
+    "technique": "Dabu Mud Resist Print",
+    "feature": "Handmade",
+    "style": "Bohemian",
+    "shape": "Square",
+    "closureType": "Hidden Zipper",
+    "placeOfOrigin": "Rajasthan, India",
+    "brandName": "Malani Impex Inc",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum..",
+    "images": [
+     "/images/seasons/seasonsP1.png",
+      "/images/seasons/seasonsP1 - Copy.png",
+      "/images/seasons/seasonsP1 - Copy (2).png"
+    ]
+  },
+  {
+    "id": 6,
+    "category": "dabu-print",
+    "season": "summer",
+    "name": "Boho Cushion Cover - Earth Brown Geometry",
+    "pattern": "Printed",
+    "material": "100% Cotton",
+    "size": "18\"X18\"",
+    "technique": "Dabu Mud Resist Print",
+    "feature": "Handmade",
+    "style": "Bohemian",
+    "shape": "Square",
+    "closureType": "Hidden Zipper",
+    "placeOfOrigin": "Rajasthan, India",
+    "brandName": "Malani Impex Inc",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.gns.",
+    "images": [
+     "/images/seasons/seasonsP1.png",
+      "/images/seasons/seasonsP1 - Copy.png",
+      "/images/seasons/seasonsP1 - Copy (2).png"
+    ]
+  }
+]

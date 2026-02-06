@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFEF5;
+  --foreground: #000000;
+}
+
+@theme inline {
+  --color-background: var(--background);
+
+  --color-foreground: var(--foreground);
+  --color-primary: #666141;
+  --color-secondary: #000000;
+
+  --color-brandOrange: #FF5A00;
+
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-neiko), sans-serif;
+}
+
+/* Hide scrollbar but keep scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
