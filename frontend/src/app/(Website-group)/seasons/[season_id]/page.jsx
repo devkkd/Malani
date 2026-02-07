@@ -1,24 +1,77 @@
+"use client";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Container from "@/components/website/Container";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/website/ProductCard";
-import productsData from "@/data/productData.json";
-import seasonData from "@/data/seasonData.json";
 import EthicalFoundation from "@/components/website/EthicalData";
+import { use } from "react";
 
-export default async function SeasonPage({ params }) {
-    const { season_id } = await params;
+export default function SeasonPage({ params }) {
+    const { season_id } = use(params);
+    const [season, setSeason] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    //   console.log(season_id, "sssssss")
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch season by slug
+                const seasonRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`);
+                const seasonData = await seasonRes.json();
+                
+                console.log('🔍 All Seasons:', seasonData);
+                console.log('🔎 Looking for slug:', season_id);
+                
+                if (seasonData.success) {
+                    const foundSeason = seasonData.data.find(s => s.slug === season_id);
+                    
+                    console.log('✅ Found Season:', foundSeason);
+                    
+                    if (!foundSeason) {
+                        console.log('❌ Season not found with slug:', season_id);
+                        notFound();
+                        return;
+                    }
+                    
+                    setSeason(foundSeason);
 
-    const season = seasonData.find(
-        s => String(s.id) === season_id
-    );
-    if (!season) notFound();
+                    // Fetch products for this season
+                    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?season=${foundSeason._id}`);
+                    const productsData = await productsRes.json();
+                    
+                    console.log('📦 Products for season:', productsData);
+                    
+                    if (productsData.success) {
+                        setProducts(productsData.data);
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Failed to fetch season data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const products = productsData.filter(
-        p => p.season === season_id
-    );
+        fetchData();
+    }, [season_id]);
+
+    if (loading) {
+        return (
+            <section className="w-full bg-[#FFFEF5] py-16 px-4 md:px-8">
+                <Container>
+                    <div className="text-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#666141] mx-auto"></div>
+                        <p className="text-[#666141] mt-4">Loading...</p>
+                    </div>
+                </Container>
+            </section>
+        );
+    }
+
+    if (!season) {
+        notFound();
+    }
 
     return (
         <section className="w-full bg-[#FFFEF5] py-16 px-4 md:px-8">
@@ -29,57 +82,65 @@ export default async function SeasonPage({ params }) {
 
                     {/* --- SEASONS LOOP --- */}
                     <div className="flex flex-col gap-24">
-                        <div key={season.id} className="w-full">
+                        <div key={season._id} className="w-full">
 
                             {/* 1. Header Row (Title left, Icon right) */}
                             <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
                                 <div className="space-y-3 max-w-4xl">
                                     <h2 className="text-4xl md:text-5xl text-black leading-tight">
-                                        {season.title}
+                                        {season.name}
                                     </h2>
-                                    <h3 className="text-2xl md:text-3xl text-[#666141] font-normal opacity-90">
-                                        {season.subtitle}
-                                    </h3>
-                                    <p className="text-black text-sm md:text-base leading-relaxed pt-2">
-                                        {season.description}
-                                    </p>
+                                    {season.title && (
+                                        <h3 className="text-2xl md:text-3xl text-[#666141] font-normal opacity-90">
+                                            {season.title}
+                                        </h3>
+                                    )}
+                                    {season.description && (
+                                        <p className="text-black text-sm md:text-base leading-relaxed pt-2">
+                                            {season.description}
+                                        </p>
+                                    )}
                                 </div>
                                 {/* Icon */}
-                                <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
-                                    <img
-                                        src={season.icon}
-                                        alt={`${season.title} Icon`}
-                                        fill
-                                        className="object-contain"
-                                    />
-                                </div>
+                                {season.icon && (
+                                    <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
+                                        <Image
+                                            src={season.icon}
+                                            alt={`${season.name} Icon`}
+                                            fill
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                )}
                             </div>
                             {/* 2. Features Grid (Beige Background) */}
-                            <div className="bg-[#FFFCEA] p-8 md:p-12 rounded-[4px] mb-12">
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-                                    {season.features.map((feature, idx) => (
-                                        <div key={idx} className="space-y-4">
-                                            <h4 className="text-[#666141] text-lg font-medium">
-                                                {feature.heading}
-                                            </h4>
-                                            <ul className="space-y-2">
-                                                {feature.items.map((item, i) => (
-                                                    <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-black">
-                                                        <span className="font-bold text-black mt-0.5">✓</span>
-                                                        <span className="opacity-90">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    ))}
+                            {season.features && season.features.length > 0 && (
+                                <div className="bg-[#FFFCEA] p-8 md:p-12 rounded-[4px] mb-12">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+                                        {season.features.map((feature, idx) => (
+                                            <div key={idx} className="space-y-4">
+                                                <h4 className="text-[#666141] text-lg font-medium">
+                                                    {feature.heading}
+                                                </h4>
+                                                <ul className="space-y-2">
+                                                    {feature.items.filter(item => item && item.trim()).map((item, i) => (
+                                                        <li key={i} className="flex items-start gap-2 text-xs md:text-sm text-black">
+                                                            <span className="font-bold text-black mt-0.5">✓</span>
+                                                            <span className="opacity-90">{item}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 mt-16">
                         {products.map(product => (
-                            <ProductCard key={product.id} product={product} />
+                            <ProductCard key={product._id} product={product} />
                         ))}
                     </div>
                     {/* --- Header Section --- */}

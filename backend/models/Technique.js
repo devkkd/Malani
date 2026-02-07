@@ -14,6 +14,40 @@ const techniqueSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  title: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  meticulousProcess: [{
+    type: String,
+    trim: true
+  }],
+  timeInvestment: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  masterArtisans: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  images: [{
+    url: {
+      type: String,
+      default: ''
+    },
+    alt: {
+      type: String,
+      default: ''
+    }
+  }],
   active: {
     type: Boolean,
     default: true

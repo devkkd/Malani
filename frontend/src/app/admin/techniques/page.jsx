@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 export default function TechniquesPage() {
   const [techniques, setTechniques] = useState([]);
@@ -12,6 +13,12 @@ export default function TechniquesPage() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
+    title: '',
+    description: '',
+    meticulousProcess: [''],
+    timeInvestment: '',
+    masterArtisans: '',
+    images: [{ url: '', alt: '' }, { url: '', alt: '' }],
     displayOrder: 0,
     active: true
   });
@@ -42,9 +49,21 @@ export default function TechniquesPage() {
     const token = localStorage.getItem('adminToken');
     
     try {
+      // Clean up empty process steps
+      const cleanedData = {
+        ...formData,
+        meticulousProcess: formData.meticulousProcess.filter(step => step && step.trim()),
+        images: formData.images.filter(img => img.url) // Only send images with URLs
+      };
+
+      console.log('📤 Submitting technique data:', cleanedData);
+      
       const url = editingTechnique 
         ? `${process.env.NEXT_PUBLIC_API_URL}/techniques/${editingTechnique._id}`
         : `${process.env.NEXT_PUBLIC_API_URL}/techniques`;
+      
+      console.log('🔗 API URL:', url);
+      console.log('🔑 Method:', editingTechnique ? 'PUT' : 'POST');
       
       const response = await fetch(url, {
         method: editingTechnique ? 'PUT' : 'POST',
@@ -52,10 +71,11 @@ export default function TechniquesPage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(cleanedData)
       });
 
       const data = await response.json();
+      console.log('📥 Response:', data);
       
       if (data.success) {
         toast.success(editingTechnique ? 'Technique updated!' : 'Technique created!');
@@ -63,10 +83,12 @@ export default function TechniquesPage() {
         resetForm();
         fetchTechniques();
       } else {
+        console.error('❌ Error:', data);
         toast.error(data.message || 'Operation failed');
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      console.error('❌ Submit error:', error);
+      toast.error('Something went wrong: ' + error.message);
     }
   };
 
@@ -95,6 +117,12 @@ export default function TechniquesPage() {
     setFormData({
       name: technique.name,
       slug: technique.slug,
+      title: technique.title || '',
+      description: technique.description || '',
+      meticulousProcess: technique.meticulousProcess?.length > 0 ? technique.meticulousProcess : [''],
+      timeInvestment: technique.timeInvestment || '',
+      masterArtisans: technique.masterArtisans || '',
+      images: technique.images?.length > 0 ? technique.images : [{ url: '', alt: '' }, { url: '', alt: '' }],
       displayOrder: technique.displayOrder,
       active: technique.active
     });
@@ -102,12 +130,43 @@ export default function TechniquesPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', slug: '', displayOrder: 0, active: true });
+    setFormData({ 
+      name: '', 
+      slug: '', 
+      title: '',
+      description: '',
+      meticulousProcess: [''],
+      timeInvestment: '',
+      masterArtisans: '',
+      images: [{ url: '', alt: '' }, { url: '', alt: '' }],
+      displayOrder: 0, 
+      active: true 
+    });
     setEditingTechnique(null);
   };
 
   const generateSlug = (name) => {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  };
+
+  const addProcessStep = () => {
+    setFormData({
+      ...formData,
+      meticulousProcess: [...formData.meticulousProcess, '']
+    });
+  };
+
+  const removeProcessStep = (index) => {
+    setFormData({
+      ...formData,
+      meticulousProcess: formData.meticulousProcess.filter((_, i) => i !== index)
+    });
+  };
+
+  const updateProcessStep = (index, value) => {
+    const newProcess = [...formData.meticulousProcess];
+    newProcess[index] = value;
+    setFormData({ ...formData, meticulousProcess: newProcess });
   };
 
   const filteredTechniques = techniques.filter(tech =>
@@ -123,7 +182,7 @@ export default function TechniquesPage() {
   }
 
   return (
-    <div className="p-4 lg:p-8">
+    <div className="p-4 lg:p-8 ">
       {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -208,72 +267,216 @@ export default function TechniquesPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h2 className="text-2xl font-medium text-[#666141] mb-6">
-              {editingTechnique ? 'Edit Technique' : 'Add New Technique'}
-            </h2>
+        <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 overflow-y-auto">
+          <div className="min-h-screen w-full flex items-start justify-center p-4 py-8">
+            <div className="bg-white rounded-lg max-w-4xl w-full shadow-2xl">
+              {/* Header - Fixed */}
+              <div className="px-6 py-4 border-b border-gray-200 bg-white rounded-t-lg">
+                <h2 className="text-2xl font-medium text-[#666141]">
+                  {editingTechnique ? 'Edit Technique' : 'Add New Technique'}
+                </h2>
+              </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Scrollable Content */}
+              <div className="px-6 py-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+                <form id="technique-form" onSubmit={handleSubmit} className="space-y-6">
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Technique Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => {
+                      setFormData({ 
+                        ...formData, 
+                        name: e.target.value,
+                        slug: generateSlug(e.target.value)
+                      });
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                    placeholder="e.g., Hand Block Printed"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Slug *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.slug}
+                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                    placeholder="e.g., hand-block-printed"
+                  />
+                </div>
+              </div>
+
+              {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Technique Name *
+                  Title
                 </label>
                 <input
                   type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => {
-                    setFormData({ 
-                      ...formData, 
-                      name: e.target.value,
-                      slug: generateSlug(e.target.value)
-                    });
-                  }}
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
-                  placeholder="e.g., Hand Block Printed"
+                  placeholder="e.g., Traditional Hand Block Printing"
                 />
               </div>
 
+              {/* Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Slug *
+                  Description
                 </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
-                  placeholder="e.g., hand-block-printed"
+                  placeholder="Detailed description of the technique..."
                 />
               </div>
 
+              {/* Meticulous Process */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Display Order
-                </label>
-                <input
-                  type="number"
-                  value={formData.displayOrder}
-                  onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Meticulous Process Steps
+                  </label>
+                  <button
+                    type="button"
+                    onClick={addProcessStep}
+                    className="text-sm text-[#666141] hover:text-[#555135] flex items-center gap-1"
+                  >
+                    <Plus size={16} />
+                    Add Step
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {formData.meticulousProcess.map((step, index) => (
+                    <div key={index} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={step}
+                        onChange={(e) => updateProcessStep(index, e.target.value)}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                        placeholder={`Step ${index + 1}`}
+                      />
+                      {formData.meticulousProcess.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeProcessStep(index)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                        >
+                          <X size={20} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="active"
-                  checked={formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  className="w-4 h-4 text-[#666141] border-gray-300 rounded focus:ring-[#666141]"
-                />
-                <label htmlFor="active" className="text-sm font-medium text-gray-700">
-                  Active
-                </label>
+              {/* Time Investment & Master Artisans */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Time Investment
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.timeInvestment}
+                    onChange={(e) => setFormData({ ...formData, timeInvestment: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                    placeholder="e.g., 2-3 days per piece"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Master Artisans
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.masterArtisans}
+                    onChange={(e) => setFormData({ ...formData, masterArtisans: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                    placeholder="e.g., 50+ skilled artisans"
+                  />
+                </div>
               </div>
 
+              {/* Images */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-4">
+                  Images (2 images)
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {formData.images.map((image, index) => (
+                    <div key={index} className="space-y-2">
+                      <p className="text-sm text-gray-600">Image {index + 1}</p>
+                      <ImageUpload
+                        existingUrl={image.url}
+                        onUploadComplete={(url) => {
+                          const newImages = [...formData.images];
+                          newImages[index].url = url;
+                          setFormData({ ...formData, images: newImages });
+                        }}
+                      />
+                      <input
+                        type="text"
+                        value={image.alt}
+                        onChange={(e) => {
+                          const newImages = [...formData.images];
+                          newImages[index].alt = e.target.value;
+                          setFormData({ ...formData, images: newImages });
+                        }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                        placeholder="Alt text"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Display Order & Active */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Display Order
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.displayOrder}
+                    onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                  />
+                </div>
+
+                <div className="flex items-end">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="active"
+                      checked={formData.active}
+                      onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                      className="w-4 h-4 text-[#666141] border-gray-300 rounded focus:ring-[#666141]"
+                    />
+                    <label htmlFor="active" className="text-sm font-medium text-gray-700">
+                      Active
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Buttons */}
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
@@ -290,6 +493,28 @@ export default function TechniquesPage() {
                 </button>
               </div>
             </form>
+              </div>
+
+              {/* Footer with Buttons - Fixed */}
+              {/* <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => { setShowModal(false); resetForm(); }}
+                    className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-white transition-colors font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    form="technique-form"
+                    className="flex-1 px-4 py-3 bg-[#666141] text-white rounded-lg hover:bg-[#555135] transition-colors font-medium"
+                  >
+                    {editingTechnique ? 'Update Technique' : 'Create Technique'}
+                  </button>
+                </div>
+              </div> */}
+            </div>
           </div>
         </div>
       )}

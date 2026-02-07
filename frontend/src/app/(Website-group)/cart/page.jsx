@@ -1,15 +1,133 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/website/Container";
-import { Trash2, ArrowRight, ShoppingBag, ShoppingCart } from "lucide-react";
+import { Trash2, ArrowRight, ShoppingCart, Plus, Minus, CheckCircle, AlertCircle } from "lucide-react";
 import { useInquiry } from "@/context/CartContext";
 import EthicalFoundation from "@/components/website/EthicalData";
 
 const CartPage = () => {
-  const { inquiries, removeInquiry } = useInquiry();
+  const { inquiries, removeInquiry, updateQuantity, clearInquiries, getTotalItems, isLoading } = useInquiry();
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    location: "",
+    message: ""
+  });
+  
+  const [formStatus, setFormStatus] = useState({
+    loading: false,
+    success: false,
+    error: null
+  });
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!formData.name || !formData.email || !formData.phone) {
+      setFormStatus({
+        loading: false,
+        success: false,
+        error: "Please fill in all required fields"
+      });
+      return;
+    }
+
+    setFormStatus({ loading: true, success: false, error: null });
+
+    try {
+      const inquiryData = {
+        ...formData,
+        products: inquiries.map(item => ({
+          productId: item.id || item._id,
+          name: item.name,
+          quantity: item.quantity || 1,
+          category: item.category,
+          images: item.images
+        })),
+        totalItems: getTotalItems(),
+        submittedAt: new Date().toISOString()
+      };
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/inquiries`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inquiryData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit inquiry");
+      }
+
+      const result = await response.json();
+      
+      setFormStatus({
+        loading: false,
+        success: true,
+        error: null
+      });
+
+      // Clear form and cart after successful submission
+      setTimeout(() => {
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          location: "",
+          message: ""
+        });
+        clearInquiries();
+      }, 2000);
+
+    } catch (error) {
+      console.error("Error submitting inquiry:", error);
+      setFormStatus({
+        loading: false,
+        success: false,
+        error: "Failed to submit inquiry. Please try again."
+      });
+    }
+  };
+
+  // Handle quantity change
+  const handleQuantityChange = (itemId, newQuantity) => {
+    if (newQuantity >= 1 && newQuantity <= 9999) {
+      updateQuantity(itemId, newQuantity);
+    }
+  };
+
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="w-full bg-[#FFFEF5] py-20 px-4 min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#666141] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading your cart...</p>
+        </div>
+      </section>
+    );
+  }
 
   // --- EMPTY STATE ---
   if (inquiries.length === 0) {
@@ -21,9 +139,15 @@ const CartPage = () => {
         <h2 className="text-2xl md:text-3xl text-[#666141] font-normal mb-2 text-center">
           Your Inquiry List is Empty
         </h2>
-        <p className="text-gray-500 max-w-sm text-center text-sm md:text-base">
+        <p className="text-gray-500 max-w-sm text-center text-sm md:text-base mb-6">
           Start adding items from our collections to request a customized quote.
         </p>
+        <Link 
+          href="/seasons"
+          className="bg-[#666141] text-[#FFFEF5] px-8 py-3 rounded-lg hover:bg-[#535036] transition-all"
+        >
+          Browse Collections
+        </Link>
       </section>
     );
   }
@@ -40,6 +164,10 @@ const CartPage = () => {
           <p className="text-gray-500 mt-2 text-sm md:text-base">
             Review your selected items and submit your details for a wholesale price consultation.
           </p>
+          <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
+            <CheckCircle size={16} className="text-green-600" />
+            <span>Your cart items are saved for 7 days</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
@@ -50,13 +178,12 @@ const CartPage = () => {
             <div className="space-y-4">
               {inquiries.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.id || item._id}
                   className="group relative flex flex-col sm:flex-row gap-5 p-4 sm:p-5 bg-white border border-[#666141]/10 rounded-xl hover:shadow-md transition-all duration-300"
                 >
                   {/* Product Image */}
                   <div className="relative w-full sm:w-32 h-32 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
                     <Image
-                      // FIX: Access the first image from the array
                       src={item.images && item.images.length > 0 ? item.images[0] : "/placeholder.png"}
                       alt={item.name}
                       fill
@@ -67,7 +194,7 @@ const CartPage = () => {
                   {/* Product Details */}
                   <div className="flex-1 flex flex-col">
                     <div className="flex justify-between items-start gap-3">
-                      <div>
+                      <div className="flex-1">
                         <h3 className="text-[#2c2c2c] font-medium text-lg leading-tight mb-1">
                           {item.name}
                         </h3>
@@ -78,7 +205,7 @@ const CartPage = () => {
 
                       {/* Remove Button */}
                       <button
-                        onClick={() => removeInquiry(item.id)}
+                        onClick={() => removeInquiry(item.id || item._id)}
                         className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all"
                         title="Remove item"
                       >
@@ -86,11 +213,40 @@ const CartPage = () => {
                       </button>
                     </div>
 
-                    {/* Additional Info / Specs (Optional) */}
-                    <div className="mt-auto pt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500 border-t border-dashed border-gray-100">
+                    {/* Additional Info / Specs */}
+                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
                       {item.size && <span>Size: {item.size}</span>}
-                      {item.material && <span>Mat: {item.material}</span>}
+                      {item.material && <span>Material: {item.material}</span>}
                       {item.season && <span>Season: {item.season}</span>}
+                    </div>
+
+                    {/* Quantity Controls */}
+                    <div className="mt-4 pt-3 border-t border-dashed border-gray-100 flex items-center justify-between">
+                      <span className="text-sm text-gray-600 font-medium">Quantity:</span>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleQuantityChange(item.id || item._id, (item.quantity || 1) - 1)}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={(item.quantity || 1) <= 1}
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <input
+                          type="number"
+                          min="1"
+                          max="9999"
+                          value={item.quantity || 1}
+                          onChange={(e) => handleQuantityChange(item.id || item._id, parseInt(e.target.value) || 1)}
+                          className="w-16 text-center py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#666141] font-medium"
+                        />
+                        <button
+                          onClick={() => handleQuantityChange(item.id || item._id, (item.quantity || 1) + 1)}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={(item.quantity || 1) >= 9999}
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -108,34 +264,74 @@ const CartPage = () => {
                 <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider font-medium">Your Information</p>
               </div>
 
-              <form className="space-y-4">
+              {/* Success Message */}
+              {formStatus.success && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+                  <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-green-800 font-medium text-sm">Inquiry Submitted Successfully!</p>
+                    <p className="text-green-600 text-xs mt-1">We'll contact you within 24 hours.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Error Message */}
+              {formStatus.error && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                  <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-red-800 font-medium text-sm">Error</p>
+                    <p className="text-red-600 text-xs mt-1">{formStatus.error}</p>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
 
                 {/* Name */}
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-gray-600 uppercase">Full Name</label>
+                  <label className="text-xs font-semibold text-gray-600 uppercase">
+                    Full Name <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     placeholder="e.g. John Doe"
+                    required
                     className="w-full px-4 py-3 bg-white border border-[#666141]/10 rounded-lg focus:outline-none focus:border-[#666141] focus:ring-1 focus:ring-[#666141] text-gray-800 placeholder-gray-300 transition-all"
                   />
                 </div>
 
                 {/* Email */}
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-gray-600 uppercase">Email Address</label>
+                  <label className="text-xs font-semibold text-gray-600 uppercase">
+                    Email Address <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     placeholder="e.g. john@company.com"
+                    required
                     className="w-full px-4 py-3 bg-white border border-[#666141]/10 rounded-lg focus:outline-none focus:border-[#666141] focus:ring-1 focus:ring-[#666141] text-gray-800 placeholder-gray-300 transition-all"
                   />
                 </div>
 
                 {/* Phone */}
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-gray-600 uppercase">Phone / WhatsApp</label>
+                  <label className="text-xs font-semibold text-gray-600 uppercase">
+                    Phone / WhatsApp <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     placeholder="e.g. +91 98765 43210"
+                    required
                     className="w-full px-4 py-3 bg-white border border-[#666141]/10 rounded-lg focus:outline-none focus:border-[#666141] focus:ring-1 focus:ring-[#666141] text-gray-800 placeholder-gray-300 transition-all"
                   />
                 </div>
@@ -146,6 +342,9 @@ const CartPage = () => {
                     <label className="text-xs font-semibold text-gray-600 uppercase">Company</label>
                     <input
                       type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
                       placeholder="Optional"
                       className="w-full px-4 py-3 bg-white border border-[#666141]/10 rounded-lg focus:outline-none focus:border-[#666141] text-gray-800 placeholder-gray-300"
                     />
@@ -154,6 +353,9 @@ const CartPage = () => {
                     <label className="text-xs font-semibold text-gray-600 uppercase">City / Country</label>
                     <input
                       type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleInputChange}
                       placeholder="e.g. Jaipur, India"
                       className="w-full px-4 py-3 bg-white border border-[#666141]/10 rounded-lg focus:outline-none focus:border-[#666141] text-gray-800 placeholder-gray-300"
                     />
@@ -164,6 +366,9 @@ const CartPage = () => {
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-gray-600 uppercase">Additional Notes</label>
                   <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
                     rows="3"
                     placeholder="Specific requirements, quantities, or customization requests..."
                     className="w-full px-4 py-3 bg-white border border-[#666141]/10 rounded-lg focus:outline-none focus:border-[#666141] focus:ring-1 focus:ring-[#666141] text-gray-800 placeholder-gray-300 resize-none transition-all"
@@ -174,15 +379,30 @@ const CartPage = () => {
                 <div className="pt-4 mt-2 border-t border-[#666141]/5">
                   <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
                     <span>Total Inquiry Items:</span>
-                    <span className="text-xl font-bold text-[#666141]">{inquiries.length}</span>
+                    <span className="text-xl font-bold text-[#666141]">{getTotalItems()}</span>
                   </div>
 
                   <button
-                    type="button"
-                    className="w-full bg-[#666141] text-[#FFFEF5] py-4 rounded-xl font-medium text-lg hover:bg-[#535036] transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={formStatus.loading || formStatus.success}
+                    className="w-full bg-[#666141] text-[#FFFEF5] py-4 rounded-xl font-medium text-lg hover:bg-[#535036] transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Send Inquiry Now
-                    <ArrowRight size={20} />
+                    {formStatus.loading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Sending...
+                      </>
+                    ) : formStatus.success ? (
+                      <>
+                        <CheckCircle size={20} />
+                        Sent Successfully
+                      </>
+                    ) : (
+                      <>
+                        Send Inquiry Now
+                        <ArrowRight size={20} />
+                      </>
+                    )}
                   </button>
 
                   <p className="text-[10px] text-center text-gray-400 mt-3">

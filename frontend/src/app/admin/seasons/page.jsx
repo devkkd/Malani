@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 export default function SeasonsPage() {
   const [seasons, setSeasons] = useState([]);
@@ -12,6 +13,16 @@ export default function SeasonsPage() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
+    title: '',
+    subtitle: '',
+    description: '',
+    icon: '',
+    features: [
+      { heading: 'Premium Materials', items: [''] },
+      { heading: 'Featured Techniques', items: [''] },
+      { heading: 'Signature Color Palette', items: [''] },
+      { heading: 'Perfect For', items: [''] }
+    ],
     displayOrder: 0,
     active: true
   });
@@ -95,6 +106,16 @@ export default function SeasonsPage() {
     setFormData({
       name: season.name,
       slug: season.slug,
+      title: season.title || '',
+      subtitle: season.subtitle || '',
+      description: season.description || '',
+      icon: season.icon || '',
+      features: season.features?.length > 0 ? season.features : [
+        { heading: 'Premium Materials', items: [''] },
+        { heading: 'Featured Techniques', items: [''] },
+        { heading: 'Signature Color Palette', items: [''] },
+        { heading: 'Perfect For', items: [''] }
+      ],
       displayOrder: season.displayOrder,
       active: season.active
     });
@@ -102,7 +123,22 @@ export default function SeasonsPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', slug: '', displayOrder: 0, active: true });
+    setFormData({ 
+      name: '', 
+      slug: '', 
+      title: '',
+      subtitle: '',
+      description: '',
+      icon: '',
+      features: [
+        { heading: 'Premium Materials', items: [''] },
+        { heading: 'Featured Techniques', items: [''] },
+        { heading: 'Signature Color Palette', items: [''] },
+        { heading: 'Perfect For', items: [''] }
+      ],
+      displayOrder: 0, 
+      active: true 
+    });
     setEditingSeason(null);
   };
 
@@ -208,88 +244,217 @@ export default function SeasonsPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h2 className="text-2xl font-medium text-[#666141] mb-6">
-              {editingSeason ? 'Edit Season' : 'Add New Season'}
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Season Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => {
-                    setFormData({ 
-                      ...formData, 
-                      name: e.target.value,
-                      slug: generateSlug(e.target.value)
-                    });
-                  }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
-                  placeholder="e.g., Summer Collection"
-                />
+        <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 overflow-y-auto">
+          <div className="min-h-screen w-full flex items-start justify-center p-4 py-8">
+            <div className="bg-white rounded-lg max-w-4xl w-full shadow-2xl">
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-gray-200 bg-white rounded-t-lg">
+                <h2 className="text-2xl font-medium text-[#666141]">
+                  {editingSeason ? 'Edit Season' : 'Add New Season'}
+                </h2>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Slug *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
-                  placeholder="e.g., summer"
-                />
-              </div>
+              {/* Scrollable Content */}
+              <div className="px-6 py-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+                <form id="season-form" onSubmit={handleSubmit} className="space-y-6">
+                  {/* Basic Info */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Season Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => {
+                          setFormData({ 
+                            ...formData, 
+                            name: e.target.value,
+                            slug: generateSlug(e.target.value)
+                          });
+                        }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                        placeholder="e.g., Summer Collection"
+                      />
+                    </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Display Order
-                </label>
-                <input
-                  type="number"
-                  value={formData.displayOrder}
-                  onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
-                />
-              </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Slug *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.slug}
+                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                        placeholder="e.g., summer"
+                      />
+                    </div>
+                  </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="active"
-                  checked={formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  className="w-4 h-4 text-[#666141] border-gray-300 rounded focus:ring-[#666141]"
-                />
-                <label htmlFor="active" className="text-sm font-medium text-gray-700">
-                  Active
-                </label>
-              </div>
+                  {/* Title & Subtitle */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                        placeholder="e.g., Summer Collection"
+                      />
+                    </div>
 
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => { setShowModal(false); resetForm(); }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-[#666141] text-white rounded-lg hover:bg-[#555135] transition-colors"
-                >
-                  {editingSeason ? 'Update' : 'Create'}
-                </button>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Subtitle
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.subtitle}
+                        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                        placeholder="e.g., Light & Breezy"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      rows={3}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                      placeholder="Detailed description..."
+                    />
+                  </div>
+
+                  {/* Icon Upload */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Season Icon
+                    </label>
+                    <ImageUpload
+                      existingUrl={formData.icon}
+                      onUploadComplete={(url) => setFormData({ ...formData, icon: url })}
+                    />
+                  </div>
+
+                  {/* Features Section */}
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Season Features</h3>
+                    <div className="space-y-6">
+                      {formData.features.map((feature, featureIdx) => (
+                        <div key={featureIdx} className="bg-gray-50 p-4 rounded-lg">
+                          <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              {feature.heading}
+                            </label>
+                          </div>
+                          <div className="space-y-2">
+                            {feature.items.map((item, itemIdx) => (
+                              <div key={itemIdx} className="flex gap-2">
+                                <input
+                                  type="text"
+                                  value={item}
+                                  onChange={(e) => {
+                                    const newFeatures = [...formData.features];
+                                    newFeatures[featureIdx].items[itemIdx] = e.target.value;
+                                    setFormData({ ...formData, features: newFeatures });
+                                  }}
+                                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                                  placeholder={`Item ${itemIdx + 1}`}
+                                />
+                                {feature.items.length > 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const newFeatures = [...formData.features];
+                                      newFeatures[featureIdx].items = newFeatures[featureIdx].items.filter((_, i) => i !== itemIdx);
+                                      setFormData({ ...formData, features: newFeatures });
+                                    }}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                                  >
+                                    <X size={20} />
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newFeatures = [...formData.features];
+                                newFeatures[featureIdx].items.push('');
+                                setFormData({ ...formData, features: newFeatures });
+                              }}
+                              className="text-sm text-[#666141] hover:text-[#555135] flex items-center gap-1"
+                            >
+                              <Plus size={16} />
+                              Add Item
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Display Order & Active */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Display Order
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.displayOrder}
+                        onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                      />
+                    </div>
+
+                    <div className="flex items-end">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id="active"
+                          checked={formData.active}
+                          onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                          className="w-4 h-4 text-[#666141] border-gray-300 rounded focus:ring-[#666141]"
+                        />
+                        <label htmlFor="active" className="text-sm font-medium text-gray-700">
+                          Active
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => { setShowModal(false); resetForm(); }}
+                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-2 bg-[#666141] text-white rounded-lg hover:bg-[#555135] transition-colors"
+                    >
+                      {editingSeason ? 'Update' : 'Create'}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}

@@ -14,6 +14,36 @@ const seasonSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  title: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  subtitle: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  icon: {
+    type: String,
+    default: ''
+  },
+  features: [{
+    heading: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    items: [{
+      type: String,
+      trim: true
+    }]
+  }],
   active: {
     type: Boolean,
     default: true

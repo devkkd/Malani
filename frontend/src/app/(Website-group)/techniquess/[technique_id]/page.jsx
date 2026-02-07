@@ -1,23 +1,76 @@
+"use client";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Container from "@/components/website/Container";
-import techniques from "@/data/techniquesData.json";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/website/ProductCard";
-import productsData from "@/data/productData.json";
-import { Search } from "lucide-react"; // Import Lucide Icon
+import { Search } from "lucide-react";
 import EthicalFoundation from "@/components/website/EthicalData";
+import { use } from "react";
 
-export default async function TechniquePage({ params }) {
-    const { technique_id } = await params;
+export default function TechniquePage({ params }) {
+    const { technique_id } = use(params);
+    const [technique, setTechnique] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const technique = techniques.find(
-        t => String(t.id) === technique_id
-    );
-    const products = productsData.filter(
-        p => p.category === technique_id
-    );
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch technique by slug
+                const techRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/techniques`);
+                const techData = await techRes.json();
+                
+                console.log('🔍 All Techniques:', techData);
+                
+                if (techData.success) {
+                    const foundTechnique = techData.data.find(t => t.slug === technique_id);
+                    
+                    console.log('✅ Found Technique:', foundTechnique);
+                    
+                    if (!foundTechnique) {
+                        notFound();
+                        return;
+                    }
+                    
+                    setTechnique(foundTechnique);
 
-    if (!technique) notFound();
+                    // Fetch products for this technique
+                    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?technique=${foundTechnique._id}`);
+                    const productsData = await productsRes.json();
+                    
+                    console.log('📦 Products for technique:', productsData);
+                    
+                    if (productsData.success) {
+                        setProducts(productsData.data);
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Failed to fetch technique data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [technique_id]);
+
+    if (loading) {
+        return (
+            <section className="w-full bg-[#FFFEF5] py-10 px-4 md:px-8">
+                <Container>
+                    <div className="text-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#666141] mx-auto"></div>
+                        <p className="text-[#666141] mt-4">Loading...</p>
+                    </div>
+                </Container>
+            </section>
+        );
+    }
+
+    if (!technique) {
+        notFound();
+    }
 
     return (
         <section className="w-full bg-[#FFFEF5] py-10 px-4 md:px-8">
@@ -27,80 +80,98 @@ export default async function TechniquePage({ params }) {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 mb-16 ">
                         <div className="space-y-4">
                             <h1 className="text-5xl md:text-6xl text-black leading-tight">
-                                {technique.title}
+                                {technique.name}
                             </h1>
-                            <p className="text-[#666141] text-2xl md:text-3xl font-normal opacity-90">
-                                {technique.subtitle}
-                            </p>
+                            {technique.title && (
+                                <p className="text-[#666141] text-2xl md:text-3xl font-normal opacity-90">
+                                    {technique.title}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-6">
-                            <p className="text-black text-sm md:text-base leading-relaxed opacity-90">
-                                {technique.description1}
-                            </p>
-                            {technique.description2 && (
+                            {technique.description && (
                                 <p className="text-black text-sm md:text-base leading-relaxed opacity-90">
-                                    {technique.description2}
+                                    {technique.description}
                                 </p>
                             )}
                         </div>
                     </div>
 
                     {/* --- Middle Section: Process & Stats --- */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 mb-16">
-                        <div className="space-y-6">
-                            <h3 className="text-black text-2xl font-normal">
-                                {technique.processTitle}
-                            </h3>
-                            <ul className="space-y-2">
-                                {technique.checklist.map((item, idx) => (
-                                    <li key={idx} className="flex gap-3 text-sm md:text-base text-black opacity-90">
-                                        <span className="font-bold text-black mt-0.5">✓</span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                    {(technique.meticulousProcess?.filter(item => item && item.trim()).length > 0 || technique.timeInvestment || technique.masterArtisans) && (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 mb-16">
+                            {technique.meticulousProcess?.filter(item => item && item.trim()).length > 0 && (
+                                <div className="space-y-6">
+                                    <h3 className="text-black text-2xl font-normal">
+                                        Meticulous Process
+                                    </h3>
+                                    <ul className="space-y-2">
+                                        {technique.meticulousProcess.filter(item => item && item.trim()).map((item, idx) => (
+                                            <li key={idx} className="flex gap-3 text-sm md:text-base text-black opacity-90">
+                                                <span className="font-bold text-black mt-0.5">✓</span>
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            <div className="flex gap-16 pt-2">
+                                {technique.timeInvestment && technique.timeInvestment.trim() && (
+                                    <div className="space-y-3">
+                                        <div className="w-12 h-12 text-[#666141] border border-[#666141] rounded-full flex items-center justify-center">
+                                            <span className="text-xl">🕒</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-black text-xl font-normal mb-1">
+                                                Time Investment
+                                            </h4>
+                                            <p className="text-sm text-black opacity-80">
+                                                {technique.timeInvestment}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                                {technique.masterArtisans && technique.masterArtisans.trim() && (
+                                    <div className="space-y-3">
+                                        <div className="w-12 h-12 text-[#666141] border border-[#666141] rounded-full flex items-center justify-center">
+                                            <span className="text-xl">▦</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-black text-xl font-normal mb-1">
+                                                Master Artisans
+                                            </h4>
+                                            <p className="text-sm text-black opacity-80">
+                                                {technique.masterArtisans}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div className="flex gap-16 pt-2">
-                            {technique.stats.map((stat, idx) => (
-                                <div key={idx} className="space-y-3">
-                                    <div className="w-12 h-12 text-[#666141] border border-[#666141] rounded-full flex items-center justify-center">
-                                        <span className="text-xl">
-                                            {idx === 0 ? "🕒" : "▦"}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-black text-xl font-normal mb-1">
-                                            {stat.label}
-                                        </h4>
-                                        <p className="text-sm text-black opacity-80">
-                                            {stat.value}
-                                        </p>
-                                    </div>
+                    )}
+
+                    {/* --- Bottom Section: Images --- */}
+                    {technique.images?.length > 0 && technique.images.some(img => img.url) && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+                            {technique.images.filter(img => img.url).map((image, idx) => (
+                                <div key={idx} className="relative aspect-[5/3] w-full bg-gray-100 overflow-hidden">
+                                    <Image
+                                        src={image.url}
+                                        alt={image.alt || `${technique.name} detail ${idx + 1}`}
+                                        fill
+                                        className="object-cover hover:scale-105 transition-transform duration-700"
+                                    />
                                 </div>
                             ))}
                         </div>
-                    </div>
-
-                    {/* --- Bottom Section: Images --- */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
-                        {technique.images.map((imgSrc, idx) => (
-                            <div key={idx} className="relative aspect-[5/3] w-full bg-gray-100 overflow-hidden">
-                                <Image
-                                    src={imgSrc}
-                                    alt={`${technique.title} detail ${idx + 1}`}
-                                    fill
-                                    className="object-cover hover:scale-105 transition-transform duration-700"
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    )}
 
                     {/* --- PRODUCTS HEADER & SEARCH --- */}
                     <div className="border-t border-[#666141]/10 pt-16 mt-16">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
                             <div>
                                 <h2 className="text-3xl md:text-4xl text-black font-normal">
-                                    {technique.title} Products
+                                    {technique.name} Products
                                 </h2>
                                 <p className="text-gray-500 mt-2">Explore our collection handcrafted using this technique.</p>
                             </div>
@@ -120,7 +191,7 @@ export default async function TechniquePage({ params }) {
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
                             {products.length > 0 ? (
                                 products.map(product => (
-                                    <div key={product.id} className="flex justify-center">
+                                    <div key={product._id} className="flex justify-center">
                                          <ProductCard product={product} />
                                     </div>
                                 ))

@@ -16,8 +16,36 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [techniques, setTechniques] = useState([]);
+  const [seasons, setSeasons] = useState([]);
 
-  const { inquiries } = useInquiry();
+  const { inquiries, getTotalItems } = useInquiry();
+
+  // Fetch Techniques and Seasons from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [techRes, seasonRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/techniques`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`)
+        ]);
+
+        const techData = await techRes.json();
+        const seasonData = await seasonRes.json();
+
+        if (techData.success) {
+          setTechniques(techData.data);
+        }
+        if (seasonData.success) {
+          setSeasons(seasonData.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch header data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Scroll Detection for Blur Effect
   useEffect(() => {
@@ -28,25 +56,17 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const techniquesSubmenu = [
-    { name: "Block Print", href: "/techniquess/block-print" },
-    { name: "Dabu Print", href: "/techniquess/dabu-print" },
-    { name: "Screen Print", href: "/techniquess/screen-print" },
-    { name: "Digital Print", href: "/techniquess/digital-print" },
-    { name: "Chikan Embroidery", href: "/techniquess/chikan-embroidery" },
-    { name: "Chikan Embroidery (Computerized)", href: "/techniquess/chikan-comp" },
-    { name: "Machine Embroidery", href: "/techniquess/machine-embroidery" },
-    { name: "Machine Embroidery (Computerized)", href: "/techniquess/machine-embroidery-comp" },
-    { name: "Hand work (Gaderi / Kantha)", href: "/techniquess/hand-work" },
-    { name: "Applique work", href: "/techniquess/applique-work" },
-  ];
+  // Convert techniques to submenu format
+  const techniquesSubmenu = techniques.map(tech => ({
+    name: tech.name,
+    href: `/techniquess/${tech.slug}`
+  }));
 
-  const seasonsSubmenu = [
-    { name: "Summer Collection", href: "/seasons/summer" },
-    { name: "Festival Collection", href: "/seasons/festival" },
-    { name: "Winter Collection", href: "/seasons/winter" },
-    { name: "Year-Round Classics", href: "/seasons/classics" },
-  ];
+  // Convert seasons to submenu format
+  const seasonsSubmenu = seasons.map(season => ({
+    name: season.name,
+    href: `/seasons/${season.slug}`
+  }));
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -136,9 +156,9 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-4">
             <Link href="/cart" className="relative group">
               <ShoppingBag className="w-6 h-6 text-[#666141] group-hover:scale-110 transition-transform" />
-              {inquiries.length > 0 && (
+              {getTotalItems() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#666141] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#FFFEF5]">
-                  {inquiries.length}
+                  {getTotalItems()}
                 </span>
               )}
             </Link>
@@ -156,9 +176,9 @@ const Header = () => {
             {/* Mobile Cart */}
             <Link href="/cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-[#666141]" />
-              {inquiries.length > 0 && (
+              {getTotalItems() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#666141] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#FFFEF5]">
-                  {inquiries.length}
+                  {getTotalItems()}
                 </span>
               )}
             </Link>
@@ -217,7 +237,7 @@ const Header = () => {
             >
               <span className="text-[#666141]">Inquiry List</span>
               <span className="text-sm font-medium bg-[#666141] text-white w-6 h-6 flex items-center justify-center rounded-full">
-                {inquiries.length}
+                {getTotalItems()}
               </span>
             </Link>
           </div>
