@@ -1,7 +1,8 @@
 "use client";
-import Container from '@/components/Container';
+import Container from '@/components/website/Container';
 import Image from 'next/image';
-import { Clock, Grid3X3 } from 'lucide-react'; // Make sure to install lucide-react
+import { Clock, Grid3X3 } from 'lucide-react';
+import techniquesData from '@/data/techniquesData.json';
 
 const TechniquesPage = () => {
   

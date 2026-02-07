@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Container from "@/components/Container";
+import Container from "@/components/website/Container";
 import techniques from "@/data/techniquesData.json";
 import { notFound } from "next/navigation";
 

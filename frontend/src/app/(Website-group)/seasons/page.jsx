@@ -1,5 +1,6 @@
 "use client";
 import Container from '@/components/website/Container';
+import EthicalData from '@/components/website/EthicalData';
 import Image from 'next/image';
 
 const AllSeasonsPage = () => {
@@ -395,7 +396,7 @@ const AllSeasonsPage = () => {
         </div>
       </Container>
       <Container>
-        <EthicalFoundation />
+        <EthicalData />
       </Container>
     </section>
   );

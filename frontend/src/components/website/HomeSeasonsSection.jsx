@@ -80,7 +80,7 @@ const HomeSeasonsSection = () => {
                                 >
                                     {/* Image Card */}
                                     <div className="relative aspect-[4/4] w-full overflow-hidden rounded-sm bg-gray-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
-                                        <img
+                                        <Image
                                             src={coverImage}
                                             alt={season.title}
                                             fill
