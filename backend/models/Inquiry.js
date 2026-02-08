@@ -15,31 +15,49 @@ const inquirySchema = new mongoose.Schema({
   },
   phone: {
     type: String,
+    required: [true, 'Phone is required'],
     trim: true
   },
   company: {
     type: String,
     trim: true
   },
+  country: {
+    type: String,
+    trim: true
+  },
+  city: {
+    type: String,
+    trim: true
+  },
+  inquiryType: {
+    type: String,
+    enum: [
+      'Product Question',
+      'Custom Order',
+      'Wholesale Inquiry',
+      'Partnership Opportunity',
+      'Press Inquiry',
+      'Other'
+    ],
+    required: [true, 'Inquiry type is required']
+  },
   message: {
     type: String,
     required: [true, 'Message is required'],
     maxlength: [2000, 'Message cannot exceed 2000 characters']
   },
-  products: [{
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
-    },
-    productName: String,
-    quantity: Number
-  }],
   status: {
     type: String,
     enum: ['new', 'contacted', 'in-progress', 'completed', 'cancelled'],
     default: 'new'
   },
-  notes: {
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high', 'urgent'],
+    default: 'medium'
+  },
+  adminNotes: {
     type: String
   }
 }, {
@@ -48,5 +66,6 @@ const inquirySchema = new mongoose.Schema({
 
 inquirySchema.index({ email: 1 });
 inquirySchema.index({ status: 1, createdAt: -1 });
+inquirySchema.index({ inquiryType: 1 });
 
 export default mongoose.model('Inquiry', inquirySchema);

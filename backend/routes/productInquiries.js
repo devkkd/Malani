@@ -1,16 +1,16 @@
 import express from 'express';
-import Inquiry from '../models/Inquiry.js';
+import ProductInquiry from '../models/ProductInquiry.js';
 
 const router = express.Router();
 
-// Create new inquiry
+// Create new product inquiry
 router.post('/', async (req, res) => {
   try {
-    const inquiry = await Inquiry.create(req.body);
+    const inquiry = await ProductInquiry.create(req.body);
     
     res.status(201).json({ 
       success: true, 
-      message: 'Inquiry submitted successfully',
+      message: 'Product inquiry submitted successfully',
       data: inquiry 
     });
   } catch (error) {
@@ -18,14 +18,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all inquiries (for admin)
+// Get all product inquiries (for admin)
 router.get('/', async (req, res) => {
   try {
-    const { status, inquiryType, limit = 50, page = 1, search } = req.query;
+    const { status, priority, limit = 50, page = 1, search } = req.query;
     
     const query = {};
     if (status) query.status = status;
-    if (inquiryType) query.inquiryType = inquiryType;
+    if (priority) query.priority = priority;
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -37,12 +37,13 @@ router.get('/', async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     
-    const inquiries = await Inquiry.find(query)
+    const inquiries = await ProductInquiry.find(query)
+      .populate('products.productId')
       .limit(parseInt(limit))
       .skip(skip)
       .sort({ createdAt: -1 });
 
-    const total = await Inquiry.countDocuments(query);
+    const total = await ProductInquiry.countDocuments(query);
 
     res.json({
       success: true,
@@ -58,13 +59,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single inquiry
+// Get single product inquiry
 router.get('/:id', async (req, res) => {
   try {
-    const inquiry = await Inquiry.findById(req.params.id);
+    const inquiry = await ProductInquiry.findById(req.params.id)
+      .populate('products.productId');
 
     if (!inquiry) {
-      return res.status(404).json({ success: false, message: 'Inquiry not found' });
+      return res.status(404).json({ success: false, message: 'Product inquiry not found' });
     }
 
     res.json({ success: true, data: inquiry });
@@ -73,24 +75,24 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Update inquiry status
+// Update product inquiry status
 router.patch('/:id/status', async (req, res) => {
   try {
-    const { status, priority, adminNotes } = req.body;
+    const { status, adminNotes, priority } = req.body;
     
     const updateData = {};
     if (status) updateData.status = status;
-    if (priority) updateData.priority = priority;
     if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
-    
-    const inquiry = await Inquiry.findByIdAndUpdate(
+    if (priority) updateData.priority = priority;
+
+    const inquiry = await ProductInquiry.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true, runValidators: true }
     );
 
     if (!inquiry) {
-      return res.status(404).json({ success: false, message: 'Inquiry not found' });
+      return res.status(404).json({ success: false, message: 'Product inquiry not found' });
     }
 
     res.json({ success: true, data: inquiry });
@@ -99,16 +101,16 @@ router.patch('/:id/status', async (req, res) => {
   }
 });
 
-// Delete inquiry
+// Delete product inquiry
 router.delete('/:id', async (req, res) => {
   try {
-    const inquiry = await Inquiry.findByIdAndDelete(req.params.id);
+    const inquiry = await ProductInquiry.findByIdAndDelete(req.params.id);
 
     if (!inquiry) {
-      return res.status(404).json({ success: false, message: 'Inquiry not found' });
+      return res.status(404).json({ success: false, message: 'Product inquiry not found' });
     }
 
-    res.json({ success: true, message: 'Inquiry deleted successfully' });
+    res.json({ success: true, message: 'Product inquiry deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -117,36 +119,42 @@ router.delete('/:id', async (req, res) => {
 // Export to CSV
 router.get('/export/csv', async (req, res) => {
   try {
-    const { status, inquiryType } = req.query;
+    const { status, priority } = req.query;
     
     const query = {};
     if (status) query.status = status;
-    if (inquiryType) query.inquiryType = inquiryType;
+    if (priority) query.priority = priority;
 
-    const inquiries = await Inquiry.find(query).sort({ createdAt: -1 });
+    const inquiries = await ProductInquiry.find(query)
+      .populate('products.productId')
+      .sort({ createdAt: -1 });
 
     // CSV Headers
-    let csv = 'ID,Name,Email,Phone,Company,Country,City,Inquiry Type,Message,Status,Priority,Date,Admin Notes\n';
+    let csv = 'ID,Name,Email,Phone,Company,Location,Total Products,Products Details,Status,Priority,Submitted Date,Admin Notes\n';
 
     // CSV Rows
     inquiries.forEach(inquiry => {
+      const productsDetails = inquiry.products.map(p => {
+        const modelInfo = p.modelNumber ? ` [Model: ${p.modelNumber}]` : '';
+        return `${p.name || 'N/A'}${modelInfo} (${p.category || 'N/A'})`;
+      }).join('; ');
+
       csv += `"${inquiry._id}",`;
       csv += `"${inquiry.name || ''}",`;
       csv += `"${inquiry.email || ''}",`;
       csv += `"${inquiry.phone || ''}",`;
       csv += `"${inquiry.company || ''}",`;
-      csv += `"${inquiry.country || ''}",`;
-      csv += `"${inquiry.city || ''}",`;
-      csv += `"${inquiry.inquiryType || ''}",`;
-      csv += `"${(inquiry.message || '').replace(/"/g, '""')}",`;
+      csv += `"${inquiry.location || ''}",`;
+      csv += `"${inquiry.totalItems || 0}",`;
+      csv += `"${productsDetails}",`;
       csv += `"${inquiry.status || ''}",`;
       csv += `"${inquiry.priority || ''}",`;
-      csv += `"${new Date(inquiry.createdAt).toLocaleString()}",`;
+      csv += `"${new Date(inquiry.submittedAt || inquiry.createdAt).toLocaleString()}",`;
       csv += `"${(inquiry.adminNotes || '').replace(/"/g, '""')}"\n`;
     });
 
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename=inquiries-${Date.now()}.csv`);
+    res.setHeader('Content-Disposition', `attachment; filename=product-inquiries-${Date.now()}.csv`);
     res.send(csv);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -156,18 +164,18 @@ router.get('/export/csv', async (req, res) => {
 // Get statistics
 router.get('/stats/overview', async (req, res) => {
   try {
-    const total = await Inquiry.countDocuments();
-    const newInquiries = await Inquiry.countDocuments({ status: 'new' });
-    const inProgress = await Inquiry.countDocuments({ status: 'in-progress' });
-    const completed = await Inquiry.countDocuments({ status: 'completed' });
-    const cancelled = await Inquiry.countDocuments({ status: 'cancelled' });
+    const total = await ProductInquiry.countDocuments();
+    const pending = await ProductInquiry.countDocuments({ status: 'pending' });
+    const inProduction = await ProductInquiry.countDocuments({ status: 'production' });
+    const completed = await ProductInquiry.countDocuments({ status: 'completed' });
+    const cancelled = await ProductInquiry.countDocuments({ status: 'cancelled' });
 
     res.json({
       success: true,
       data: {
         total,
-        new: newInquiries,
-        inProgress,
+        pending,
+        inProduction,
         completed,
         cancelled
       }

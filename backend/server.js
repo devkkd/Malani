@@ -15,7 +15,9 @@ import productRoutes from './routes/products.js';
 import seasonRoutes from './routes/seasons.js';
 import techniqueRoutes from './routes/techniques.js';
 import inquiryRoutes from './routes/inquiries.js';
+import productInquiryRoutes from './routes/productInquiries.js';
 import uploadRoutes from './routes/upload.js';
+import bulkUploadRoutes from './routes/bulkUpload.js';
 
 // Load environment variables
 dotenv.config();
@@ -76,7 +78,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/seasons', seasonRoutes);
 app.use('/api/techniques', techniqueRoutes);
 app.use('/api/inquiries', inquiryRoutes);
+app.use('/api/product-inquiries', productInquiryRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/bulk-upload', bulkUploadRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

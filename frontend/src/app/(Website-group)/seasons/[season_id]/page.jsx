@@ -139,8 +139,8 @@ export default function SeasonPage({ params }) {
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 mt-16">
-                        {products.map(product => (
-                            <ProductCard key={product._id} product={product} />
+                        {products.map((product, index) => (
+                            <ProductCard key={product._id} product={product} priority={index < 4} />
                         ))}
                     </div>
                     {/* --- Header Section --- */}

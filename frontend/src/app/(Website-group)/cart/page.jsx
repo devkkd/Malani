@@ -3,14 +3,18 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import Container from "@/components/website/Container";
-import { Trash2, ArrowRight, ShoppingCart, Plus, Minus, CheckCircle, AlertCircle } from "lucide-react";
+import { Trash2, ArrowRight, ShoppingCart, CheckCircle, AlertCircle } from "lucide-react";
 import { useInquiry } from "@/context/CartContext";
 import EthicalFoundation from "@/components/website/EthicalData";
 
 const CartPage = () => {
-  const { inquiries, removeInquiry, updateQuantity, clearInquiries, getTotalItems, isLoading } = useInquiry();
+  const router = useRouter();
+  const { inquiries, removeInquiry, clearInquiries, getTotalItems, isLoading } = useInquiry();
   
+  console.log("inquiry",inquiries);
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -26,6 +30,47 @@ const CartPage = () => {
     success: false,
     error: null
   });
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+
+  // Auto-close modal and redirect after 5 seconds
+  React.useEffect(() => {
+    if (showSuccessModal) {
+      setCountdown(5); // Reset countdown
+      
+      const countdownInterval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      const timer = setTimeout(() => {
+        closeSuccessModal();
+      }, 5000); // 5 seconds
+
+      return () => {
+        clearTimeout(timer);
+        clearInterval(countdownInterval);
+      };
+    }
+  }, [showSuccessModal]);
+
+  // Close modal handler
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    setFormStatus({
+      loading: false,
+      success: false,
+      error: null
+    });
+    // Redirect to home page
+    router.push('/');
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -58,7 +103,7 @@ const CartPage = () => {
         products: inquiries.map(item => ({
           productId: item.id || item._id,
           name: item.name,
-          quantity: item.quantity || 1,
+          modelNumber: item.modelNumber || item.model_number,
           category: item.category,
           images: item.images
         })),
@@ -66,53 +111,42 @@ const CartPage = () => {
         submittedAt: new Date().toISOString()
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/inquiries`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(inquiryData),
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/product-inquiries`,
+        inquiryData
+      );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit inquiry");
-      }
-
-      const result = await response.json();
-      
-      setFormStatus({
-        loading: false,
-        success: true,
-        error: null
-      });
-
-      // Clear form and cart after successful submission
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          company: "",
-          location: "",
-          message: ""
+      if (response.data.success) {
+        setFormStatus({
+          loading: false,
+          success: true,
+          error: null
         });
-        clearInquiries();
-      }, 2000);
+
+        // Show success modal
+        setShowSuccessModal(true);
+
+        // Clear form and cart after delay
+        setTimeout(() => {
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            company: "",
+            location: "",
+            message: ""
+          });
+          clearInquiries();
+        }, 3000);
+      }
 
     } catch (error) {
       console.error("Error submitting inquiry:", error);
       setFormStatus({
         loading: false,
         success: false,
-        error: "Failed to submit inquiry. Please try again."
+        error: error.response?.data?.message || "Failed to submit inquiry. Please try again."
       });
-    }
-  };
-
-  // Handle quantity change
-  const handleQuantityChange = (itemId, newQuantity) => {
-    if (newQuantity >= 1 && newQuantity <= 9999) {
-      updateQuantity(itemId, newQuantity);
     }
   };
 
@@ -156,6 +190,82 @@ const CartPage = () => {
     <section className="w-full bg-[#FFFEF5] py-12 md:py-20 px-4">
       <Container>
 
+        {/* Success Modal */}
+        {showSuccessModal && (
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+            onClick={closeSuccessModal}
+          >
+            <div 
+              className="bg-[#FFFEF5] rounded-2xl shadow-2xl max-w-md w-full p-8 md:p-10 relative animate-slideUp border border-[#666141]/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              
+              {/* Success Icon */}
+              <div className="w-20 h-20 bg-gradient-to-br from-[#666141] to-[#535036] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <CheckCircle size={40} className="text-[#FFFEF5]" strokeWidth={2.5} />
+              </div>
+
+              {/* Title */}
+              <h2 className="text-3xl md:text-4xl text-[#666141] text-center mb-3 font-normal">
+                Inquiry Sent Successfully!
+              </h2>
+
+              {/* Message */}
+              <p className="text-gray-600 text-center text-sm md:text-base leading-relaxed mb-2">
+                Thank you for your interest in our products. Our team will review your inquiry and get back to you within
+              </p>
+              <p className="text-[#666141] text-center text-lg font-medium mb-8">
+                24 hours
+              </p>
+
+              {/* Decorative Line */}
+              <div className="w-16 h-1 bg-[#666141]/20 mx-auto mb-8 rounded-full"></div>
+
+              {/* Info Box */}
+              <div className="bg-[#FFFCEA] border border-[#666141]/10 rounded-xl p-4 mb-6">
+                <p className="text-xs text-gray-600 text-center leading-relaxed">
+                  We've sent a confirmation email to <span className="font-semibold text-[#666141]">{formData.email}</span>
+                </p>
+              </div>
+
+              {/* Countdown Timer with Progress Bar */}
+              <div className="mb-8">
+                <div className="text-center mb-3">
+                  <p className="text-sm text-gray-500">
+                    Redirecting to home in <span className="font-bold text-[#666141] text-lg">{countdown}</span> seconds...
+                  </p>
+                </div>
+                {/* Progress Bar */}
+                <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-[#666141] to-[#535036] transition-all duration-1000 ease-linear"
+                    style={{ width: `${(countdown / 5) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Browse Collections Button */}
+              <Link
+                href="/"
+                onClick={closeSuccessModal}
+                className="w-full bg-[#666141] text-[#FFFEF5] py-4 rounded-xl font-medium text-base hover:bg-[#535036] transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 group"
+              >
+                Go to Home
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              {/* Close Text */}
+              <button
+                onClick={closeSuccessModal}
+                className="w-full mt-4 text-gray-500 hover:text-[#666141] text-sm transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Page Header */}
         <div className="mb-12 border-b border-[#666141]/10 pb-6">
           <h1 className="text-3xl md:text-4xl text-[#666141]">
@@ -183,12 +293,27 @@ const CartPage = () => {
                 >
                   {/* Product Image */}
                   <div className="relative w-full sm:w-32 h-32 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-                    <Image
-                      src={item.images && item.images.length > 0 ? item.images[0] : "/placeholder.png"}
-                      alt={item.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+                    {item.images && item.images.length > 0 ? (
+                      <Image
+                        src={typeof item.images[0] === 'string' ? item.images[0] : item.images[0]?.url || '/placeholder.png'}
+                        alt={item.name}
+                        fill
+                        sizes="128px"
+                        quality={85}
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k="
+                        unoptimized={
+                          (typeof item.images[0] === 'string' && item.images[0].includes('r2.dev')) ||
+                          (item.images[0]?.url && item.images[0].url.includes('r2.dev'))
+                        }
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                        No Image
+                      </div>
+                    )}
                   </div>
 
                   {/* Product Details */}
@@ -198,6 +323,11 @@ const CartPage = () => {
                         <h3 className="text-[#2c2c2c] font-medium text-lg leading-tight mb-1">
                           {item.name}
                         </h3>
+                        {(item.modelNumber || item.model_number) && (
+                          <p className="text-xs text-gray-500 font-medium mb-1">
+                            Model: {item.modelNumber || item.model_number}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">
                           {item.category?.replace("-", " ") || "Collection"}
                         </p>
@@ -220,34 +350,7 @@ const CartPage = () => {
                       {item.season && <span>Season: {item.season}</span>}
                     </div>
 
-                    {/* Quantity Controls */}
-                    <div className="mt-4 pt-3 border-t border-dashed border-gray-100 flex items-center justify-between">
-                      <span className="text-sm text-gray-600 font-medium">Quantity:</span>
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleQuantityChange(item.id || item._id, (item.quantity || 1) - 1)}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                          disabled={(item.quantity || 1) <= 1}
-                        >
-                          <Minus size={16} />
-                        </button>
-                        <input
-                          type="number"
-                          min="1"
-                          max="9999"
-                          value={item.quantity || 1}
-                          onChange={(e) => handleQuantityChange(item.id || item._id, parseInt(e.target.value) || 1)}
-                          className="w-16 text-center py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#666141] font-medium"
-                        />
-                        <button
-                          onClick={() => handleQuantityChange(item.id || item._id, (item.quantity || 1) + 1)}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                          disabled={(item.quantity || 1) >= 9999}
-                        >
-                          <Plus size={16} />
-                        </button>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               ))}
@@ -263,17 +366,6 @@ const CartPage = () => {
                 <h2 className="text-2xl text-[#666141]">Consultation</h2>
                 <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider font-medium">Your Information</p>
               </div>
-
-              {/* Success Message */}
-              {formStatus.success && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-                  <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-green-800 font-medium text-sm">Inquiry Submitted Successfully!</p>
-                    <p className="text-green-600 text-xs mt-1">We'll contact you within 24 hours.</p>
-                  </div>
-                </div>
-              )}
 
               {/* Error Message */}
               {formStatus.error && (

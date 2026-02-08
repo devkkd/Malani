@@ -7,7 +7,9 @@ import {
   Package, 
   Layers, 
   Palette, 
-  MessageSquare, 
+  MessageSquare,
+  ShoppingCart,
+  Upload,
   Settings,
   LogOut
 } from 'lucide-react';
@@ -16,9 +18,11 @@ import { useAuth } from '@/context/AuthContext';
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },
   { icon: Package, label: 'Products', href: '/admin/products' },
+  { icon: Upload, label: 'Bulk Upload', href: '/admin/bulk-upload' },
   { icon: Layers, label: 'Seasons', href: '/admin/seasons' },
   { icon: Palette, label: 'Techniques', href: '/admin/techniques' },
   { icon: MessageSquare, label: 'Inquiries', href: '/admin/inquiries' },
+  { icon: ShoppingCart, label: 'Product Inquiries', href: '/admin/product-inquiries' },
   { icon: Settings, label: 'Settings', href: '/admin/settings' },
 ];
 
@@ -45,7 +49,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
       `}>
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-6 border-b border-white/10">
+          <div className="p-4.5 border-b border-white/10">
             <Link href="/admin/dashboard" className="flex items-center justify-center">
               <div className="bg-white rounded-lg p-2">
                 <Image
@@ -60,7 +64,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
           </div>
 
           {/* Admin Info */}
-          <div className="px-6 py-4 border-b border-white/10">
+          {/* <div className="px-6 py-4 border-b border-white/10">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full bg-[#E9E4B5] flex items-center justify-center">
                 <span className="text-[#666141] font-medium text-lg">
@@ -72,10 +76,10 @@ export default function AdminSidebar({ isOpen, onClose }) {
                 <p className="text-xs text-white/70 truncate">{admin?.role || 'Administrator'}</p>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+          <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto no-scrollbar">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;

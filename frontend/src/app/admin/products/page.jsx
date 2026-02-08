@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search, Eye } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, Eye, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -146,12 +147,18 @@ export default function ProductsPage() {
                 <tr key={product._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center">
-                      <div className="h-12 w-12 flex-shrink-0 rounded-lg bg-gray-100 overflow-hidden">
+                      <div className="relative h-12 w-12 flex-shrink-0 rounded-lg bg-gray-100 overflow-hidden">
                         {product.images?.[0]?.url ? (
-                          <img
+                          <Image
                             src={product.images[0].url}
                             alt={product.name}
-                            className="h-full w-full object-cover"
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                            quality={85}
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k="
+                            unoptimized={product.images[0].url.includes('r2.dev')}
                           />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center text-gray-400">

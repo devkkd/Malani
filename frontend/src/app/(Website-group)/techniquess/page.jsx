@@ -190,8 +190,8 @@ const TechniquesPage = () => {
                       Products with {tech.name}
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                      {productsMap[tech._id].map(product => (
-                        <ProductCard key={product._id} product={product} />
+                      {productsMap[tech._id].map((product, index) => (
+                        <ProductCard key={product._id} product={product} priority={index < 4} />
                       ))}
                     </div>
                   </div>

@@ -47,6 +47,45 @@ router.get('/test-r2', protect, async (req, res) => {
   }
 });
 
+// Helper function to upload buffer to Cloudflare R2
+export const uploadToCloudflare = async (buffer, originalFilename) => {
+  const r2Bucket = process.env.CLOUDFLARE_R2_BUCKET_NAME;
+  const r2PublicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL;
+
+  if (!r2Bucket || !r2PublicUrl) {
+    throw new Error('Cloudflare R2 not configured');
+  }
+
+  // Generate unique filename
+  const imageId = crypto.randomBytes(16).toString('hex');
+  const ext = originalFilename.split('.').pop() || 'jpg';
+  const filename = `products/${imageId}.${ext}`;
+
+  // Upload to R2 with optimized caching headers
+  const r2Client = getR2Client();
+  const uploadCommand = new PutObjectCommand({
+    Bucket: r2Bucket,
+    Key: filename,
+    Body: buffer,
+    ContentType: `image/${ext}`,
+    CacheControl: 'public, max-age=31536000, immutable', // 1 year cache
+    Metadata: {
+      'original-name': originalFilename
+    }
+  });
+
+  await r2Client.send(uploadCommand);
+
+  // Construct public URL
+  const imageUrl = `${r2PublicUrl}/${filename}`;
+
+  return {
+    id: imageId,
+    url: imageUrl,
+    filename: originalFilename
+  };
+};
+
 // Upload image to Cloudflare R2
 router.post('/image', protect, async (req, res) => {
   try {
@@ -88,13 +127,14 @@ router.post('/image', protect, async (req, res) => {
 
     console.log('☁️  Uploading to Cloudflare R2...');
 
-    // Upload to R2
+    // Upload to R2 with optimized caching headers
     const r2Client = getR2Client();
     const uploadCommand = new PutObjectCommand({
       Bucket: r2Bucket,
       Key: filename,
       Body: buffer,
       ContentType: 'image/jpeg',
+      CacheControl: 'public, max-age=31536000, immutable', // 1 year cache
     });
 
     await r2Client.send(uploadCommand);

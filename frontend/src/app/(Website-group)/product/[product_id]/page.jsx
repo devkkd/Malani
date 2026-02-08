@@ -86,7 +86,13 @@ const SingleProductPage = ({ params }) => {
                       src={img.url}
                       alt={img.alt || `View ${idx + 1}`}
                       fill
+                      sizes="96px"
                       className="object-cover"
+                      loading={idx < 4 ? "eager" : "lazy"}
+                      quality={75}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k="
+                      unoptimized={img.url.includes('r2.dev')}
                     />
                   </button>
                 ))}
@@ -100,8 +106,13 @@ const SingleProductPage = ({ params }) => {
                   src={activeImage}
                   alt={product.name}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
+                  quality={90}
                   className="object-cover transition-transform duration-500 hover:scale-105"
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k="
+                  unoptimized={activeImage.includes('r2.dev')}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400">
@@ -129,6 +140,14 @@ const SingleProductPage = ({ params }) => {
                 <h1 className="text-3xl md:text-4xl text-[#666141] font-serif leading-tight">
                   {product.name}
                 </h1>
+
+                {/* Model Number */}
+                {product.modelNumber && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">Model:</span>
+                    <span className="text-sm font-semibold text-[#666141]">{product.modelNumber}</span>
+                  </div>
+                )}
 
                 {/* Optional: Price or Category Tag */}
                 <div className="flex items-center gap-3">
@@ -174,6 +193,7 @@ const SingleProductPage = ({ params }) => {
 
               {/* Column 1 */}
               <div className="p-0">
+                {product.modelNumber && <DetailRow label="Model Number" value={product.modelNumber} />}
                 <DetailRow label="Technique" value={product.technique?.name} />
                 <DetailRow label="Material" value={product.specifications?.material} />
                 <DetailRow label="Pattern" value={product.specifications?.pattern} />

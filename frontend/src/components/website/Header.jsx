@@ -163,12 +163,28 @@ const Header = () => {
               )}
             </Link>
 
+          
+
             <Link
               href="/contact"
               className="flex items-center gap-2 bg-[#666141] text-white px-5 py-3 rounded-full text-[12px] font-medium hover:bg-[#5a563d] transition-colors shadow-sm active:scale-95"
             >
               Contact Us <ArrowRight className="w-4 h-4" />
             </Link>
+              {/* Alibaba Button */}
+            <a
+              href="https://malaniimpex.en.alibaba.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#FF6A00] text-white px-5 py-3 rounded-full text-[12px] font-medium hover:bg-[#E55F00] transition-colors shadow-sm active:scale-95"
+            >
+              {/* <img 
+                src="/images/logo/alibaba.png" 
+                alt="Alibaba" 
+                className="w-4 h-4 object-contain"
+              /> */}
+              Alibaba
+            </a>
           </div>
 
           {/* Mobile Right Section (Cart + Toggle) */}
@@ -239,6 +255,31 @@ const Header = () => {
               <span className="text-sm font-medium bg-[#666141] text-white w-6 h-6 flex items-center justify-center rounded-full">
                 {getTotalItems()}
               </span>
+            </Link>
+
+            {/* Mobile Alibaba Button */}
+            <a
+              href="https://malaniimpex.en.alibaba.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center gap-2 bg-[#FF6A00] text-white px-6 py-4 rounded-lg font-medium hover:bg-[#E55F00] transition-colors shadow-md active:scale-95"
+            >
+              <img 
+                src="/images/logo/alibaba.png" 
+                alt="Alibaba" 
+                className="w-5 h-5 object-contain"
+              />
+              Visit us on Alibaba
+            </a>
+
+            {/* Mobile Contact Button */}
+            <Link
+              href="/contact"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center gap-2 bg-[#666141] text-white px-6 py-4 rounded-lg font-medium hover:bg-[#5a563d] transition-colors shadow-md active:scale-95"
+            >
+              Contact Us <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>

@@ -17,6 +17,7 @@ export default function InquiryBtn({ product, showViewCart = true }) {
       id: product.id || product._id,
       _id: product._id || product.id,
       name: product.name,
+      modelNumber: product.modelNumber || product.model_number,
       images: product.images?.map(img => img.url || img) || [],
       category: product.category,
       season: product.season?.name || product.season,
@@ -53,7 +54,7 @@ export default function InquiryBtn({ product, showViewCart = true }) {
   if (inCart) {
     return (
       <div className="space-y-3">
-        <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-xl">
+        {/* <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-xl">
           <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
             <Check size={20} className="text-green-600" />
           </div>
@@ -61,7 +62,7 @@ export default function InquiryBtn({ product, showViewCart = true }) {
             <p className="text-sm font-medium text-green-800">Added to Inquiry List</p>
             <p className="text-xs text-green-600">Quantity: {quantity}</p>
           </div>
-        </div>
+        </div> */}
         
         <div className="flex gap-3">
           {showViewCart && (
