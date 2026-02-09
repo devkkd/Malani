@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {
+    // Empty config to silence the warning
+    // Turbopack will use default settings
+  },
+  
   // Memory optimization
   experimental: {
     // Reduce memory usage during build
