@@ -18,6 +18,7 @@ import inquiryRoutes from './routes/inquiries.js';
 import productInquiryRoutes from './routes/productInquiries.js';
 import uploadRoutes from './routes/upload.js';
 import bulkUploadRoutes from './routes/bulkUpload.js';
+import setupRoutes from './routes/setup.js';
 
 // Load environment variables
 dotenv.config();
@@ -81,6 +82,7 @@ app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/product-inquiries', productInquiryRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/bulk-upload', bulkUploadRoutes);
+app.use('/api/setup', setupRoutes); // Temporary setup route
 
 // 404 handler
 app.use('*', (req, res) => {
