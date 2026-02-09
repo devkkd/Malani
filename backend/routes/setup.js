@@ -3,8 +3,8 @@ import Admin from '../models/Admin.js';
 
 const router = express.Router();
 
-// Temporary route to create admin (REMOVE AFTER USE!)
-router.post('/create-admin', async (req, res) => {
+// Temporary route to create admin - GET request (no CORS issues)
+router.get('/create-admin', async (req, res) => {
   try {
     // Check if admin already exists
     const existingAdmin = await Admin.findOne({ username: 'admin' });
@@ -14,7 +14,8 @@ router.post('/create-admin', async (req, res) => {
         success: true,
         message: 'Admin already exists',
         username: existingAdmin.username,
-        email: existingAdmin.email
+        email: existingAdmin.email,
+        note: 'You can login now!'
       });
     }
 
@@ -30,9 +31,14 @@ router.post('/create-admin', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Admin created successfully',
+      message: 'Admin created successfully! 🎉',
       username: admin.username,
       email: admin.email,
+      loginUrl: 'https://malani.vercel.app/admin',
+      credentials: {
+        username: 'admin',
+        password: 'Admin@123'
+      },
       note: 'Please delete this route after use!'
     });
   } catch (error) {
