@@ -49,4 +49,37 @@ router.get('/create-admin', async (req, res) => {
   }
 });
 
+// Reset admin password
+router.get('/reset-admin-password', async (req, res) => {
+  try {
+    const admin = await Admin.findOne({ username: 'admin' });
+    
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin not found'
+      });
+    }
+
+    // Reset password
+    admin.password = 'Admin@123';
+    await admin.save();
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully! 🎉',
+      username: admin.username,
+      email: admin.email,
+      newPassword: 'Admin@123',
+      loginUrl: 'https://malani.vercel.app/admin',
+      note: 'Try logging in now!'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
 export default router;
