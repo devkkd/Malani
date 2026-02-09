@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "seed": "node scripts/seedData.js",
     "drop-indexes": "node scripts/dropIndexes.js",
-    "clean": "node scripts/cleanDatabase.js"
+    "clean": "node scripts/cleanDatabase.js",
+    "create-admin": "node scripts/createAdmin.js"
   },
   "keywords": [
     "textile",
