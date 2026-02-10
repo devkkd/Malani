@@ -29,9 +29,25 @@ const seasonSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
-  icon: {
-    type: String,
-    default: ''
+  homeImage: {
+    url: {
+      type: String,
+      default: ''
+    },
+    alt: {
+      type: String,
+      default: ''
+    }
+  },
+  iconImage: {
+    url: {
+      type: String,
+      default: ''
+    },
+    alt: {
+      type: String,
+      default: ''
+    }
   },
   features: [{
     heading: {

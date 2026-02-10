@@ -7,7 +7,7 @@ dotenv.config();
 const defaultAdmin = {
   username: 'admin',
   email: 'admin@malaniimpex.com',
-  password: 'Admin@123',
+  password: 'Malani@123',
   name: 'Malani Admin',
   role: 'super-admin',
   isActive: true

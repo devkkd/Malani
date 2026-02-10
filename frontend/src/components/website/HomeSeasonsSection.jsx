@@ -1,51 +1,68 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Container from '@/components/website/Container';
 
 const HomeSeasonsSection = () => {
+    const [seasonsData, setSeasonsData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // --- DATA: Seasons (Same structure as AllSeasonsPage) ---
-    const seasonsData = [
-        {
-            id: "summer",
-            title: "Summer Collection",
-            subtitle: "Light, Breathable, Exceptionally Beautiful",
-            products: [
-                { img: "/images/seasons/seasonsP1.png" } // Using 1st product only
-            ]
-        },
-        {
-            id: "festival",
-            title: "Festival Collection",
-            subtitle: "Celebration Woven with Joy and Splendor",
-            products: [
-                { img: "/images/seasons/seasonsP2.png" }
-            ]
-        },
-        {
-            id: "winter",
-            title: "Winter Collection",
-            subtitle: "Warmth Lovingly Woven with Expert Care",
-            products: [
-                { img: "/images/seasons/seasonsP3.png" }
-            ]
-        },
-        {
-            id: "classics",
-            title: "Year-Round Classics",
-            subtitle: "Timeless Elegance for Every Season",
-            products: [
-                { img: "/images/seasons/seasonsP4.png" }
-            ]
-        }
-    ];
+    // Fetch seasons from API
+    useEffect(() => {
+        const fetchSeasons = async () => {
+            try {
+                const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/seasons`;
+                console.log('🔍 Fetching seasons from:', apiUrl);
+                
+                const response = await fetch(apiUrl);
+                console.log('📡 Response status:', response.status);
+                
+                const result = await response.json();
+                console.log('📦 Seasons API Result:', result);
+                
+                if (result.success && result.data) {
+                    console.log('✅ Seasons loaded:', result.data.length);
+                    console.log('🖼️ First season images:', {
+                        homeImage: result.data[0]?.homeImage,
+                        iconImage: result.data[0]?.iconImage,
+                        icon: result.data[0]?.icon
+                    });
+                    setSeasonsData(result.data);
+                } else {
+                    console.log('⚠️ No data in response');
+                }
+            } catch (error) {
+                console.error('❌ Error fetching seasons:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSeasons();
+    }, []);
+
+    if (loading) {
+        return (
+            <section className="w-full bg-[#FFFEF5] py-8 px-4 md:px-8 border-t border-[#666141]/10">
+                <Container>
+                    <div className="text-center py-20">
+                        <p className="text-[#666141] text-lg">Loading seasons...</p>
+                    </div>
+                </Container>
+            </section>
+        );
+    }
+
+    if (!seasonsData.length) {
+        return null;
+    }
 
     return (
         <section className="w-full bg-[#FFFEF5] py-8 px-4 md:px-8 border-t border-[#666141]/10">
             <Container>
-                <div className="max-w-[1400px] mx-auto space-y-16">
+                <div className="
+                space-y-16">
 
                     {/* --- Header --- */}
                     <div className="space-y-8 text-center md:text-left">
@@ -69,35 +86,48 @@ const HomeSeasonsSection = () => {
                     {/* --- Collections Grid --- */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {seasonsData.map((season) => {
-                            // Extract the first product image
-                            const coverImage = season.products[0].img;
+                            // Use homeImage for home page display, fallback to icon or show without image
+                            const coverImage = season.homeImage?.url || season.icon;
+                            console.log(`🖼️ Season ${season.name}:`, {
+                                homeImage: season.homeImage,
+                                icon: season.icon,
+                                using: coverImage || 'NO IMAGE'
+                            });
 
                             return (
                                 <Link
-                                    key={season.id}
-                                    href={`/seasons/${season.id}`}
+                                    key={season._id}
+                                    href={`/seasons/${season.slug}`}
                                     className="group block space-y-6"
                                 >
                                     {/* Image Card */}
-                                    <div className="relative aspect-[4/4] w-full overflow-hidden rounded-sm bg-gray-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
-                                        <Image
-                                            src={coverImage}
-                                            alt={season.title}
-                                            fill
-                                            className="object-contain transition-transform duration-700 group-hover:scale-105"
-                                        />
-
-                                        {/* Overlay Gradient (Optional for better text visibility if text was on image) */}
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-                                    </div>
+                                    {coverImage ? (
+                                        <div className="relative aspect-[4/4] w-full overflow-hidden rounded-sm bg-gray-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
+                                            <Image
+                                                src={coverImage}
+                                                alt={season.homeImage?.alt || season.name}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                                className="object-contain transition-transform duration-700 group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                                        </div>
+                                    ) : (
+                                        <div className="relative aspect-[4/4] w-full overflow-hidden rounded-sm bg-gradient-to-br from-[#E9E4B5] to-[#d9d4a5] shadow-sm transition-shadow duration-300 group-hover:shadow-md flex items-center justify-center">
+                                            <div className="text-center p-6">
+                                                <div className="text-6xl mb-2">🖼️</div>
+                                                <p className="text-[#666141] text-sm font-medium">No Image</p>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {/* Text Content */}
                                     <div className="space-y-2 text-center md:text-left">
                                         <h4 className="text-2xl text-black font-normal group-hover:text-[#666141] transition-colors duration-300">
-                                            {season.title}
+                                            {season.title || season.name}
                                         </h4>
                                         <p className="text-sm text-black opacity-70 line-clamp-2 leading-relaxed">
-                                            {season.subtitle}
+                                            {season.subtitle || season.description}
                                         </p>
                                         <div className="pt-2">
                                             <span className="inline-block text-sm font-medium text-[#666141] border-b border-[#666141] pb-0.5 group-hover:border-transparent transition-all">

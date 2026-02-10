@@ -34,9 +34,12 @@ router.get('/:slug', async (req, res) => {
 // Create season (Admin only)
 router.post('/', protect, async (req, res) => {
   try {
+    console.log('📝 Creating season with data:', JSON.stringify(req.body, null, 2));
     const season = await Season.create(req.body);
+    console.log('✅ Season created:', season);
     res.status(201).json({ success: true, data: season });
   } catch (error) {
+    console.error('❌ Create season error:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 });
@@ -44,6 +47,9 @@ router.post('/', protect, async (req, res) => {
 // Update season (Admin only)
 router.put('/:id', protect, async (req, res) => {
   try {
+    console.log('📝 Updating season:', req.params.id);
+    console.log('📦 Update data:', JSON.stringify(req.body, null, 2));
+    
     const season = await Season.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -54,8 +60,10 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Season not found' });
     }
 
+    console.log('✅ Season updated:', season);
     res.json({ success: true, data: season });
   } catch (error) {
+    console.error('❌ Update season error:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 });

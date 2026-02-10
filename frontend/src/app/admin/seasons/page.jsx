@@ -16,7 +16,9 @@ export default function SeasonsPage() {
     title: '',
     subtitle: '',
     description: '',
-    icon: '',
+    homeImage: { url: '', alt: '' },
+    iconImage: { url: '', alt: '' },
+    icon: '', // Deprecated but keeping for backward compatibility
     features: [
       { heading: 'Premium Materials', items: [''] },
       { heading: 'Featured Techniques', items: [''] },
@@ -52,6 +54,8 @@ export default function SeasonsPage() {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
     
+    console.log('📤 Submitting form data:', formData);
+    
     try {
       const url = editingSeason 
         ? `${process.env.NEXT_PUBLIC_API_URL}/seasons/${editingSeason._id}`
@@ -67,6 +71,7 @@ export default function SeasonsPage() {
       });
 
       const data = await response.json();
+      console.log('📥 Server response:', data);
       
       if (data.success) {
         toast.success(editingSeason ? 'Season updated!' : 'Season created!');
@@ -77,6 +82,7 @@ export default function SeasonsPage() {
         toast.error(data.message || 'Operation failed');
       }
     } catch (error) {
+      console.error('❌ Submit error:', error);
       toast.error('Something went wrong');
     }
   };
@@ -103,12 +109,16 @@ export default function SeasonsPage() {
 
   const handleEdit = (season) => {
     setEditingSeason(season);
+    console.log('📝 Editing season:', season);
+    
     setFormData({
       name: season.name,
       slug: season.slug,
       title: season.title || '',
       subtitle: season.subtitle || '',
       description: season.description || '',
+      homeImage: season.homeImage || { url: '', alt: '' },
+      iconImage: season.iconImage || { url: '', alt: '' },
       icon: season.icon || '',
       features: season.features?.length > 0 ? season.features : [
         { heading: 'Premium Materials', items: [''] },
@@ -119,6 +129,12 @@ export default function SeasonsPage() {
       displayOrder: season.displayOrder,
       active: season.active
     });
+    
+    console.log('📋 Form data set with images:', {
+      homeImage: season.homeImage || { url: '', alt: '' },
+      iconImage: season.iconImage || { url: '', alt: '' }
+    });
+    
     setShowModal(true);
   };
 
@@ -129,6 +145,8 @@ export default function SeasonsPage() {
       title: '',
       subtitle: '',
       description: '',
+      homeImage: { url: '', alt: '' },
+      iconImage: { url: '', alt: '' },
       icon: '',
       features: [
         { heading: 'Premium Materials', items: [''] },
@@ -196,6 +214,36 @@ export default function SeasonsPage() {
             key={season._id}
             className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
           >
+            {/* Images Preview */}
+            {(season.homeImage?.url || season.iconImage?.url) && (
+              <div className="mb-4 flex gap-2">
+                {season.homeImage?.url && (
+                  <div className="relative w-20 h-20 rounded overflow-hidden border border-gray-200">
+                    <img 
+                      src={season.homeImage.url} 
+                      alt="Home" 
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[10px] text-center py-0.5">
+                      Home
+                    </span>
+                  </div>
+                )}
+                {season.iconImage?.url && (
+                  <div className="relative w-20 h-20 rounded overflow-hidden border border-gray-200">
+                    <img 
+                      src={season.iconImage.url} 
+                      alt="Icon" 
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[10px] text-center py-0.5">
+                      Icon
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <h3 className="text-xl font-medium text-gray-900 mb-1">{season.name}</h3>
@@ -338,14 +386,78 @@ export default function SeasonsPage() {
                   </div>
 
                   {/* Icon Upload */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Season Icon
-                    </label>
-                    <ImageUpload
-                      existingUrl={formData.icon}
-                      onUploadComplete={(url) => setFormData({ ...formData, icon: url })}
-                    />
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Season Images</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Home Image */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Home Page Image *
+                        </label>
+                        <p className="text-xs text-gray-500 mb-2">This image will be displayed on the home page</p>
+                        <ImageUpload
+                          existingUrl={formData.homeImage?.url || ''}
+                          onUploadComplete={(url) => {
+                            console.log('🖼️ Home image uploaded:', url);
+                            setFormData({ 
+                              ...formData, 
+                              homeImage: { 
+                                url: url, 
+                                alt: formData.homeImage?.alt || '' 
+                              } 
+                            });
+                          }}
+                        />
+                        <input
+                          type="text"
+                          value={formData.homeImage?.alt || ''}
+                          onChange={(e) => setFormData({ 
+                            ...formData, 
+                            homeImage: { 
+                              url: formData.homeImage?.url || '', 
+                              alt: e.target.value 
+                            } 
+                          })}
+                          className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                          placeholder="Image alt text"
+                        />
+                      </div>
+
+                      {/* Icon Image */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Icon Image
+                        </label>
+                        <p className="text-xs text-gray-500 mb-2">This icon will be used in other places</p>
+                        <ImageUpload
+                          existingUrl={formData.iconImage?.url || ''}
+                          onUploadComplete={(url) => {
+                            console.log('🎯 Icon image uploaded:', url);
+                            setFormData({ 
+                              ...formData, 
+                              iconImage: { 
+                                url: url, 
+                                alt: formData.iconImage?.alt || '' 
+                              } 
+                            });
+                          }}
+                        />
+                        <input
+                          type="text"
+                          value={formData.iconImage?.alt || ''}
+                          onChange={(e) => setFormData({ 
+                            ...formData, 
+                            iconImage: { 
+                              url: formData.iconImage?.url || '', 
+                              alt: e.target.value 
+                            } 
+                          })}
+                          className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+                          placeholder="Icon alt text"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Features Section */}

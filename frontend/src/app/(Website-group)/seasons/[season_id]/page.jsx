@@ -101,13 +101,14 @@ export default function SeasonPage({ params }) {
                                         </p>
                                     )}
                                 </div>
-                                {/* Icon */}
-                                {season.icon && (
+                                {/* Icon - Using iconImage */}
+                                {(season.iconImage?.url || season.icon) && (
                                     <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
                                         <Image
-                                            src={season.icon}
-                                            alt={`${season.name} Icon`}
+                                            src={season.iconImage?.url || season.icon}
+                                            alt={season.iconImage?.alt || `${season.name} Icon`}
                                             fill
+                                            sizes="(max-width: 768px) 128px, 128px"
                                             className="object-contain"
                                         />
                                     </div>

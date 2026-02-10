@@ -1,24 +1,64 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Container from '@/components/website/Container';
-// 1. Import from JSON file
-import techniquesData from "@/data/techniquesData.json";
-import { ChevronDown, ChevronUp } from 'lucide-react'; 
 
 const HomeTechniquesSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [techniquesData, setTechniquesData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Use imported data directly
+  // Fetch techniques from API
+  useEffect(() => {
+    const fetchTechniques = async () => {
+      try {
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/techniques`;
+        console.log('🔍 Fetching from:', apiUrl);
+        
+        const response = await fetch(apiUrl);
+        console.log('📡 Response status:', response.status);
+        
+        const result = await response.json();
+        console.log('📦 API Result:', result);
+        
+        if (result.success && result.data) {
+          console.log('✅ Techniques loaded:', result.data.length);
+          setTechniquesData(result.data);
+        } else {
+          console.log('⚠️ No data in response');
+        }
+      } catch (error) {
+        console.error('❌ Error fetching techniques:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTechniques();
+  }, []);
+
   const activeData = techniquesData[activeIndex];
 
-  // Handler for mobile accordion toggle (using local state if needed for multi-open, or reuse activeIndex logic)
-  // For mobile accordion, we might want independent toggle logic or reuse activeIndex. 
-  // Reusing activeIndex makes it behave like an accordion where only one is open at a time.
   const toggleAccordion = (index) => {
     setActiveIndex(index === activeIndex ? -1 : index);
   };
+
+  if (loading) {
+    return (
+      <section className="w-full bg-[#FFFEF5] py-16 px-4 md:px-8 border-t border-[#666141]/10">
+        <Container>
+          <div className="text-center py-20">
+            <p className="text-[#666141] text-lg">Loading techniques...</p>
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
+  if (!techniquesData.length) {
+    return null;
+  }
 
   return (
     <section className="w-full bg-[#FFFEF5] py-16 px-4 md:px-8 border-t border-[#666141]/10">
@@ -62,7 +102,7 @@ const HomeTechniquesSection = () => {
               const isActive = index === activeIndex;
               
               return (
-                <div key={tech.id} className="border-b border-[#666141]/20">
+                <div key={tech._id} className="border-b border-[#666141]/20">
                   
                   {/* Accordion Header */}
                   <button 
@@ -70,7 +110,7 @@ const HomeTechniquesSection = () => {
                     className={`w-full text-left py-5 px-2 flex justify-between items-center transition-colors duration-300 ${isActive ? 'bg-[#666141]/5' : ''}`}
                   >
                     <span className={`text-lg font-medium ${isActive ? 'text-[#666141]' : 'text-black'}`}>
-                      {tech.title}
+                      {tech.name}
                     </span>
                     {isActive ? (
                         <span className="text-[#666141] font-bold text-xl">−</span> 
@@ -86,37 +126,43 @@ const HomeTechniquesSection = () => {
                     <div className="p-4 pb-8 space-y-6">
                       
                       <div className="space-y-2">
-                        <h4 className="text-lg text-[#666141] font-normal opacity-90">{tech.subtitle}</h4>
-                        <p className="text-sm text-black opacity-80 leading-relaxed">{tech.description || tech.description1}</p>
+                        {tech.title && (
+                          <h4 className="text-lg text-[#666141] font-normal opacity-90">{tech.title}</h4>
+                        )}
+                        <p className="text-sm text-black opacity-80 leading-relaxed">{tech.description}</p>
                       </div>
 
                       {/* Small Images Grid (2 Columns) */}
-                      <div className="grid grid-cols-2 gap-3">
-                        {tech.images.map((imgSrc, i) => (
-                           <div key={i} className="relative aspect-[4/3] w-full bg-gray-100 rounded-sm overflow-hidden">
-                              <Image 
-                                 src={imgSrc} 
-                                 alt={`${tech.title} Detail ${i+1}`}
-                                 fill
-                                 className="object-cover"
-                              />
-                           </div>
-                        ))}
-                      </div>
+                      {tech.images && tech.images.length > 0 && (
+                        <div className="grid grid-cols-2 gap-3">
+                          {tech.images.map((img, i) => (
+                             <div key={i} className="relative aspect-[4/3] w-full bg-gray-100 rounded-sm overflow-hidden">
+                                <Image 
+                                   src={img.url || img} 
+                                   alt={img.alt || `${tech.name} Detail ${i+1}`}
+                                   fill
+                                   className="object-cover"
+                                />
+                             </div>
+                          ))}
+                        </div>
+                      )}
 
                       {/* Checklist */}
-                      <ul className="space-y-2">
-                         {tech.checklist.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2 text-xs text-black opacity-90">
-                               <span className="font-bold text-[#666141] mt-0.5">✓</span>
-                               <span>{item}</span>
-                            </li>
-                         ))}
-                      </ul>
+                      {tech.meticulousProcess && tech.meticulousProcess.length > 0 && (
+                        <ul className="space-y-2">
+                           {tech.meticulousProcess.map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs text-black opacity-90">
+                                 <span className="font-bold text-[#666141] mt-0.5">✓</span>
+                                 <span>{item}</span>
+                              </li>
+                           ))}
+                        </ul>
+                      )}
 
                       {/* CTA */}
                       <Link 
-                         href={`/techniquess/${tech.id}`} 
+                         href={`/techniquess/${tech.slug}`} 
                          className="inline-block text-sm font-medium text-[#666141] hover:underline"
                       >
                          View Details →
@@ -138,7 +184,7 @@ const HomeTechniquesSection = () => {
              <div className="col-span-4 flex flex-col border-t border-[#666141]/20">
                 {techniquesData.map((tech, index) => (
                    <div 
-                      key={tech.id}
+                      key={tech._id}
                       onMouseEnter={() => setActiveIndex(index)}
                       className={`
                         cursor-pointer py-4 px-5 text-lg font-medium transition-all duration-300 border-b border-[#666141]/20
@@ -148,7 +194,7 @@ const HomeTechniquesSection = () => {
                         }
                       `}
                    >
-                      {tech.title}
+                      {tech.name}
                    </div>
                 ))}
              </div>
@@ -161,52 +207,58 @@ const HomeTechniquesSection = () => {
                     <div className="space-y-6">
                        <div className="space-y-2">
                           <h2 className="text-5xl text-black leading-tight">
-                             {activeData.title}
+                             {activeData.name}
                           </h2>
-                          <h3 className="text-2xl text-[#666141] font-normal opacity-90">
-                             {activeData.subtitle}
-                          </h3>
+                          {activeData.title && (
+                            <h3 className="text-2xl text-[#666141] font-normal opacity-90">
+                               {activeData.title}
+                            </h3>
+                          )}
                        </div>
                        
                        <p className="text-base text-black leading-relaxed max-w-3xl opacity-90">
-                          {activeData.description || activeData.description1}
+                          {activeData.description}
                        </p>
 
                        {/* Process List */}
-                       <div className="space-y-3 pt-2">
-                          <h4 className="text-lg text-black font-medium">Our Meticulous Process</h4>
-                          <ul className="space-y-2">
-                             {activeData.checklist.map((item, i) => (
-                                <li key={i} className="flex items-start gap-3 text-sm text-black opacity-90">
-                                   <span className="font-bold text-[#666141]">✓</span>
-                                   <span>{item}</span>
-                                </li>
-                             ))}
-                          </ul>
-                       </div>
+                       {activeData.meticulousProcess && activeData.meticulousProcess.length > 0 && (
+                         <div className="space-y-3 pt-2">
+                            <h4 className="text-lg text-black font-medium">Our Meticulous Process</h4>
+                            <ul className="space-y-2">
+                               {activeData.meticulousProcess.map((item, i) => (
+                                  <li key={i} className="flex items-start gap-3 text-sm text-black opacity-90">
+                                     <span className="font-bold text-[#666141]">✓</span>
+                                     <span>{item}</span>
+                                  </li>
+                               ))}
+                            </ul>
+                         </div>
+                       )}
                     </div>
 
                     {/* Images Row */}
-                    <div className="grid grid-cols-2 gap-6">
-                       {activeData.images.map((imgSrc, i) => (
-                          <div key={i} className="relative aspect-[4/3] w-full bg-gray-100 rounded-sm overflow-hidden">
-                             <Image 
-                                src={imgSrc} 
-                                alt={`${activeData.title} Detail ${i+1}`}
-                                fill
-                                className="object-cover hover:scale-105 transition-transform duration-700"
-                             />
-                          </div>
-                       ))}
-                    </div>
+                    {activeData.images && activeData.images.length > 0 && (
+                      <div className="grid grid-cols-2 gap-6">
+                         {activeData.images.map((img, i) => (
+                            <div key={i} className="relative aspect-[4/3] w-full bg-gray-100 rounded-sm overflow-hidden">
+                               <Image 
+                                  src={img.url || img} 
+                                  alt={img.alt || `${activeData.name} Detail ${i+1}`}
+                                  fill
+                                  className="object-cover hover:scale-105 transition-transform duration-700"
+                               />
+                            </div>
+                         ))}
+                      </div>
+                    )}
 
                     {/* CTA Button */}
                     <div>
                        <Link 
-                          href={`/techniquess/${activeData.id}`} 
+                          href={`/techniquess/${activeData.slug}`} 
                           className="inline-block bg-[#666141] text-[#FFFEF5] px-8 py-4 rounded-full text-base font-medium hover:bg-[#555135] transition-colors shadow-md"
                        >
-                          See All {activeData.title} →
+                          See All {activeData.name} →
                        </Link>
                     </div>
 

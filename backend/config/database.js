@@ -7,8 +7,8 @@ const connectDB = async () => {
       socketTimeoutMS: 45000,
     });
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    console.log(`📊 Database: ${conn.connection.name}`);
+    console.log(`✅ MongoDB Connected`);
+    // console.log(`📊 Database: ${conn.connection.name}`);
 
     // Handle connection events
     mongoose.connection.on('error', (err) => {

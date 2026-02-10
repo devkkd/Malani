@@ -250,11 +250,25 @@ const Footer = () => {
         {/* --- BOTTOM SECTION: Copyright & Certifications --- */}
         <div className="border-t border-[#666141]/20">
           <div className="mx-auto py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-900">
-            <p>
-              © 2026 Malani Impex. All rights reserved. Lovingly handcrafted in
-              India <span className="text-red-500">♥</span> since 1981
-            </p>
-            <p>
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+              <p>
+                © 2026 Malani Impex. All rights reserved. Lovingly handcrafted in
+                India <span className="text-red-500">♥</span> since 1981
+              </p>
+              <span className="hidden md:inline text-gray-400">|</span>
+              <p className="text-gray-600">
+                Crafted and Powered by{' '}
+                <a 
+                  href="https://www.kontentkraftdigital.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="font-medium text-[#666141] hover:text-[#535036] transition-colors"
+                >
+                  Kontent Kraft Digital
+                </a>
+              </p>
+            </div>
+            <p className="text-center md:text-right">
               Certifications Fair Trade • GOTS • SEDEX • Zero Child Labor •
               Women-Owned
             </p>
