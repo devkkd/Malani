@@ -94,15 +94,31 @@ router.get('/by-season/:seasonSlug', async (req, res) => {
 // Get single product by slug or ID (Public)
 router.get('/:identifier', async (req, res) => {
   try {
-    const product = await Product.findOne({
-      $or: [
-        { slug: req.params.identifier },
-        { _id: req.params.identifier }
-      ],
-      active: true
-    })
-    .populate('technique', 'name slug')
-    .populate('season', 'name slug');
+    let product;
+    
+    // Check if identifier is a valid MongoDB ObjectId
+    const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(req.params.identifier);
+    
+    if (isValidObjectId) {
+      // If valid ObjectId, search by both _id and slug
+      product = await Product.findOne({
+        $or: [
+          { slug: req.params.identifier },
+          { _id: req.params.identifier }
+        ],
+        active: true
+      })
+      .populate('technique', 'name slug')
+      .populate('season', 'name slug');
+    } else {
+      // If not valid ObjectId, search only by slug
+      product = await Product.findOne({
+        slug: req.params.identifier,
+        active: true
+      })
+      .populate('technique', 'name slug')
+      .populate('season', 'name slug');
+    }
 
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
@@ -117,18 +133,13 @@ router.get('/:identifier', async (req, res) => {
 // Create product (Admin only)
 router.post('/', protect, async (req, res) => {
   try {
-    console.log('Creating product with data:', JSON.stringify(req.body, null, 2));
-    
     const product = await Product.create(req.body);
     const populatedProduct = await Product.findById(product._id)
       .populate('technique', 'name slug')
       .populate('season', 'name slug');
     
-    console.log('Product created successfully:', product._id);
     res.status(201).json({ success: true, data: populatedProduct });
   } catch (error) {
-    console.error('Product creation error:', error.message);
-    console.error('Error details:', error);
     res.status(400).json({ 
       success: false, 
       message: error.message,

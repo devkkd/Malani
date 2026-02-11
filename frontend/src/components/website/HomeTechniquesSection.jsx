@@ -14,22 +14,14 @@ const HomeTechniquesSection = () => {
     const fetchTechniques = async () => {
       try {
         const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/techniques`;
-        console.log('🔍 Fetching from:', apiUrl);
-        
         const response = await fetch(apiUrl);
-        console.log('📡 Response status:', response.status);
-        
         const result = await response.json();
-        console.log('📦 API Result:', result);
         
         if (result.success && result.data) {
-          console.log('✅ Techniques loaded:', result.data.length);
           setTechniquesData(result.data);
-        } else {
-          console.log('⚠️ No data in response');
         }
       } catch (error) {
-        console.error('❌ Error fetching techniques:', error);
+        console.error('Error fetching techniques:', error);
       } finally {
         setLoading(false);
       }

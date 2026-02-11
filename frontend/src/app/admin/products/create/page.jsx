@@ -120,8 +120,6 @@ export default function CreateProductPage() {
         }
       };
 
-      console.log('Submitting product data:', submitData);
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
         method: 'POST',
         headers: {
@@ -132,7 +130,6 @@ export default function CreateProductPage() {
       });
 
       const data = await response.json();
-      console.log('Response:', data);
 
       if (data.success) {
         toast.success('Product created successfully!');

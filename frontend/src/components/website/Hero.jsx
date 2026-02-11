@@ -4,8 +4,8 @@ import React, { useState } from "react";
 
 const slides = [
     "/images/home/slider1.jpg",
-    "/images/home/slider2.jpg",
-    "/images/home/slider3.jpg",
+    "/images/slider-1.svg",
+    "/images/slider-2.svg",
 ];
 
 export default function Hero() {

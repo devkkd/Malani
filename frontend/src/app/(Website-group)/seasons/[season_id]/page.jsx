@@ -20,16 +20,10 @@ export default function SeasonPage({ params }) {
                 const seasonRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`);
                 const seasonData = await seasonRes.json();
                 
-                console.log('🔍 All Seasons:', seasonData);
-                console.log('🔎 Looking for slug:', season_id);
-                
                 if (seasonData.success) {
                     const foundSeason = seasonData.data.find(s => s.slug === season_id);
                     
-                    console.log('✅ Found Season:', foundSeason);
-                    
                     if (!foundSeason) {
-                        console.log('❌ Season not found with slug:', season_id);
                         notFound();
                         return;
                     }
@@ -40,14 +34,12 @@ export default function SeasonPage({ params }) {
                     const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?season=${foundSeason._id}`);
                     const productsData = await productsRes.json();
                     
-                    console.log('📦 Products for season:', productsData);
-                    
                     if (productsData.success) {
                         setProducts(productsData.data);
                     }
                 }
             } catch (error) {
-                console.error('❌ Failed to fetch season data:', error);
+                console.error('Failed to fetch season data:', error);
             } finally {
                 setLoading(false);
             }

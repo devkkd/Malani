@@ -3,8 +3,8 @@ import Link from "next/link";
 import InquiryBtn from "./InquiryBtn";
 
 export default function ProductCard({ product, priority = false }) {
-  // Handle both old JSON format and new API format
-  const productId = product._id || product.id;
+  // Use slug for URL, fallback to _id if slug not available
+  const productSlug = product.slug || product._id || product.id;
   
   // Get primary image or first image
   const primaryImage = product.images?.find(img => img.isPrimary);
@@ -19,7 +19,7 @@ export default function ProductCard({ product, priority = false }) {
       
       {/* --- Image Section --- */}
       <div className="relative aspect-square w-full overflow-hidden rounded-sm bg-gray-100">
-        <Link href={`/product/${productId}`}>
+        <Link href={`/product/${productSlug}`} className="block relative w-full h-full">
           {productImage && productImage !== '/images/placeholder.jpg' ? (
             <Image
               src={productImage}
@@ -46,7 +46,7 @@ export default function ProductCard({ product, priority = false }) {
       <div className="flex flex-col gap-3">
         
         {/* Title */}
-        <Link href={`/product/${productId}`}>
+        <Link href={`/product/${productSlug}`}>
           <h3 className="text-black text-[13px] md:text-sm font-normal leading-relaxed hover:text-[#666141] transition-colors line-clamp-3">
             {productName}
           </h3>

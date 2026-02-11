@@ -54,8 +54,6 @@ export default function SeasonsPage() {
     e.preventDefault();
     const token = localStorage.getItem('adminToken');
     
-    console.log('📤 Submitting form data:', formData);
-    
     try {
       const url = editingSeason 
         ? `${process.env.NEXT_PUBLIC_API_URL}/seasons/${editingSeason._id}`
@@ -71,7 +69,6 @@ export default function SeasonsPage() {
       });
 
       const data = await response.json();
-      console.log('📥 Server response:', data);
       
       if (data.success) {
         toast.success(editingSeason ? 'Season updated!' : 'Season created!');
@@ -109,7 +106,6 @@ export default function SeasonsPage() {
 
   const handleEdit = (season) => {
     setEditingSeason(season);
-    console.log('📝 Editing season:', season);
     
     setFormData({
       name: season.name,
@@ -130,10 +126,6 @@ export default function SeasonsPage() {
       active: season.active
     });
     
-    console.log('📋 Form data set with images:', {
-      homeImage: season.homeImage || { url: '', alt: '' },
-      iconImage: season.iconImage || { url: '', alt: '' }
-    });
     
     setShowModal(true);
   };
@@ -399,7 +391,6 @@ export default function SeasonsPage() {
                         <ImageUpload
                           existingUrl={formData.homeImage?.url || ''}
                           onUploadComplete={(url) => {
-                            console.log('🖼️ Home image uploaded:', url);
                             setFormData({ 
                               ...formData, 
                               homeImage: { 
@@ -433,7 +424,6 @@ export default function SeasonsPage() {
                         <ImageUpload
                           existingUrl={formData.iconImage?.url || ''}
                           onUploadComplete={(url) => {
-                            console.log('🎯 Icon image uploaded:', url);
                             setFormData({ 
                               ...formData, 
                               iconImage: { 

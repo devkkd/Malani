@@ -345,7 +345,7 @@ const ContactPage = () => {
                   <span className="text-lg font-medium">Map Placeholder</span>
                 </div>
                 {/* Uncomment line below when you have the image */}
-                {/* <Image src="/images/contact/map.png" alt="Map Location" fill className="object-cover" /> */}
+                <Image src="/images/map.svg" alt="Map Location" fill className="object-cover" />
               </div>
             </div>
 

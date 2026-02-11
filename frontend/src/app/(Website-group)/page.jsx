@@ -329,6 +329,7 @@ const HomePage = () => {
                           src={partner.src}
                           alt={partner.name}
                           fill
+                          sizes="200px"
                           className="object-contain"
                         />
                       </div>
@@ -370,6 +371,7 @@ const HomePage = () => {
                           src={partner.src}
                           alt={partner.name}
                           fill
+                          sizes="200px"
                           className="object-contain"
                         />
                       </div>

@@ -19,12 +19,9 @@ const SingleProductPage = ({ params }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${product_id}`);
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/products/${product_id}`;
+        const response = await fetch(apiUrl);
         const data = await response.json();
-        
-        console.log('📦 Product data:', data);
-        console.log('📏 Sizes:', data.data?.sizes);
-        console.log('🌍 Origin:', data.data?.specifications?.placeOfOrigin);
         
         if (data.success && data.data) {
           setProduct(data.data);
@@ -36,14 +33,15 @@ const SingleProductPage = ({ params }) => {
           notFound();
         }
       } catch (error) {
-        console.error('❌ Failed to fetch product:', error);
         notFound();
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProduct();
+    if (product_id) {
+      fetchProduct();
+    }
   }, [product_id]);
 
   if (loading) {

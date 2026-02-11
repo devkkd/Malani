@@ -56,14 +56,9 @@ export default function TechniquesPage() {
         images: formData.images.filter(img => img.url) // Only send images with URLs
       };
 
-      console.log('📤 Submitting technique data:', cleanedData);
-      
       const url = editingTechnique 
         ? `${process.env.NEXT_PUBLIC_API_URL}/techniques/${editingTechnique._id}`
         : `${process.env.NEXT_PUBLIC_API_URL}/techniques`;
-      
-      console.log('🔗 API URL:', url);
-      console.log('🔑 Method:', editingTechnique ? 'PUT' : 'POST');
       
       const response = await fetch(url, {
         method: editingTechnique ? 'PUT' : 'POST',
@@ -75,7 +70,6 @@ export default function TechniquesPage() {
       });
 
       const data = await response.json();
-      console.log('📥 Response:', data);
       
       if (data.success) {
         toast.success(editingTechnique ? 'Technique updated!' : 'Technique created!');

@@ -21,12 +21,8 @@ export default function TechniquePage({ params }) {
                 const techRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/techniques`);
                 const techData = await techRes.json();
                 
-                console.log('🔍 All Techniques:', techData);
-                
                 if (techData.success) {
                     const foundTechnique = techData.data.find(t => t.slug === technique_id);
-                    
-                    console.log('✅ Found Technique:', foundTechnique);
                     
                     if (!foundTechnique) {
                         notFound();
@@ -39,14 +35,12 @@ export default function TechniquePage({ params }) {
                     const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?technique=${foundTechnique._id}`);
                     const productsData = await productsRes.json();
                     
-                    console.log('📦 Products for technique:', productsData);
-                    
                     if (productsData.success) {
                         setProducts(productsData.data);
                     }
                 }
             } catch (error) {
-                console.error('❌ Failed to fetch technique data:', error);
+                console.error('Failed to fetch technique data:', error);
             } finally {
                 setLoading(false);
             }

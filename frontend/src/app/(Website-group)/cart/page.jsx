@@ -14,7 +14,6 @@ const CartPage = () => {
   const router = useRouter();
   const { inquiries, removeInquiry, clearInquiries, getTotalItems, isLoading } = useInquiry();
   
-  console.log("inquiry",inquiries);
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -274,10 +273,10 @@ const CartPage = () => {
           <p className="text-gray-500 mt-2 text-sm md:text-base">
             Review your selected items and submit your details for a wholesale price consultation.
           </p>
-          <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
+          {/* <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
             <CheckCircle size={16} className="text-green-600" />
             <span>Your cart items are saved for 7 days</span>
-          </div>
+          </div> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">

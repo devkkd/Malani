@@ -81,9 +81,9 @@ const Header = () => {
 
   return (
     <header 
-      className={`w-full sticky top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+      className={`w-full fixed top-0 left-0 right-0 z-[100] transition-all duration-300 border-b ${
         scrolled 
-          ? "bg-[#FFFEF5]/80 backdrop-blur-md border-[#666141]/10 shadow-sm py-2" 
+          ? "bg-[#FFFEF5]/95 backdrop-blur-md border-[#666141]/10 shadow-md py-2" 
           : "bg-[#FFFEF5] border-gray-100 py-4"
       }`}
     >
@@ -173,7 +173,7 @@ const Header = () => {
             </Link>
               {/* Alibaba Button */}
             <a
-              href="https://malaniimpex.en.alibaba.com"
+              href="https://malaniimpexinc.trustpass.alibaba.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-[#FF6A00] text-white px-5 py-3 rounded-full text-[12px] font-medium hover:bg-[#E55F00] transition-colors shadow-sm active:scale-95"

@@ -8,9 +8,11 @@ import {
   Youtube,
   Pin, // Using Pin for Pinterest
   ArrowRight,
-  ArrowUp
+  ArrowUp,
+  Linkedin
 } from 'lucide-react';
 import Container from './Container';
+import QRCode from './QRCode';
 
 const Footer = () => {
   // --- Data for Footer Columns ---
@@ -93,6 +95,7 @@ const Footer = () => {
                   src="/images/logo/logo.png"
                   alt="Malani Impex Logo"
                   fill
+                  sizes="48px"
                   priority
                   className="object-contain"
                 />
@@ -168,24 +171,18 @@ const Footer = () => {
                 />
               </div>
               <a
-                href="#"
+                href="https://malaniimpexinc.trustpass.alibaba.com/"
                 className="text-xs text-gray-900 hover:underline flex items-center gap-1"
               >
                 Visit Our Alibaba Store <ArrowRight size={12} />
               </a>
 
-              {/* QR Code Placeholder */}
-              <div className="w-24 h-24 bg-white border border-gray-200 p-1">
-                {/* Replace this div with your QR Image */}
-                <div className="w-full h-full bg-black flex items-center justify-center">
-                  {/* Simulating QR code pattern */}
-                  <div className="text-[8px] text-white text-center p-1">QR CODE</div>
-                </div>
-              </div>
+              {/* QR Code */}
+              <QRCode url="https://malaniimpexinc.trustpass.alibaba.com/" size={88} />
 
               <div className="text-[10px] text-gray-900 leading-tight">
-                <p>Scan QR to Visit Hebei Spring-Tex I/e Corp., Ltd.</p>
-                <a href="#" className="hover:underline">
+                <p>Scan QR to Visit Malani Impex Inc.</p>
+                <a href="https://malaniimpexinc.trustpass.alibaba.com/" className="hover:underline">
                   Alibaba Store →
                 </a>
               </div>
@@ -211,13 +208,13 @@ const Footer = () => {
                 <span className="text-sm text-gray-600">Follow Us</span>
                 <div className="flex gap-3">
                   <a
-                    href="#"
-                    className="w-8 h-8 flex items-center justify-center bg-[#E1306C] text-white rounded-full hover:opacity-90 transition-opacity"
+                    href="https://www.instagram.com/malaniimpexinc/?hl=en"
+                    className="w-8 h-8 flex items-center justify-center bg-[#C13584] text-white rounded-full hover:opacity-90 transition-opacity"
                   >
                     <Instagram size={16} />
                   </a>
                   <a
-                    href="#"
+                    href="https://www.facebook.com/MalaniImpexInc/"
                     className="w-8 h-8 flex items-center justify-center bg-[#1877F2] text-white rounded-full hover:opacity-90 transition-opacity"
                   >
                     <Facebook size={16} />
@@ -230,9 +227,9 @@ const Footer = () => {
                   </a>
                   <a
                     href="#"
-                    className="w-8 h-8 flex items-center justify-center bg-[#BD081C] text-white rounded-full hover:opacity-90 transition-opacity"
+                    className="w-8 h-8 flex items-center justify-center bg-[#0077B5] text-white rounded-full hover:opacity-90 transition-opacity"
                   >
-                    <Pin size={16} />
+                    <Linkedin size={16} />
                   </a>
                 </div>
               </div>

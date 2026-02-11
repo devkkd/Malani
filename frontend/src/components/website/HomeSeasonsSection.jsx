@@ -13,27 +13,14 @@ const HomeSeasonsSection = () => {
         const fetchSeasons = async () => {
             try {
                 const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/seasons`;
-                console.log('🔍 Fetching seasons from:', apiUrl);
-                
                 const response = await fetch(apiUrl);
-                console.log('📡 Response status:', response.status);
-                
                 const result = await response.json();
-                console.log('📦 Seasons API Result:', result);
                 
                 if (result.success && result.data) {
-                    console.log('✅ Seasons loaded:', result.data.length);
-                    console.log('🖼️ First season images:', {
-                        homeImage: result.data[0]?.homeImage,
-                        iconImage: result.data[0]?.iconImage,
-                        icon: result.data[0]?.icon
-                    });
                     setSeasonsData(result.data);
-                } else {
-                    console.log('⚠️ No data in response');
                 }
             } catch (error) {
-                console.error('❌ Error fetching seasons:', error);
+                console.error('Error fetching seasons:', error);
             } finally {
                 setLoading(false);
             }
@@ -88,11 +75,6 @@ const HomeSeasonsSection = () => {
                         {seasonsData.map((season) => {
                             // Use homeImage for home page display, fallback to icon or show without image
                             const coverImage = season.homeImage?.url || season.icon;
-                            console.log(`🖼️ Season ${season.name}:`, {
-                                homeImage: season.homeImage,
-                                icon: season.icon,
-                                using: coverImage || 'NO IMAGE'
-                            });
 
                             return (
                                 <Link

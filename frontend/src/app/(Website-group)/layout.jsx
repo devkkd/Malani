@@ -7,7 +7,9 @@ export default function WebsiteLayout({ children }) {
   return (
     <InquiryProvider>
       <Header />
-      {children}
+      <main className="pt-[80px]">
+        {children}
+      </main>
       <Footer />
       <Toaster position="top-right" />
     </InquiryProvider>
