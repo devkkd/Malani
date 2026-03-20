@@ -3,10 +3,8 @@ import Link from "next/link";
 import InquiryBtn from "./InquiryBtn";
 
 export default function ProductCard({ product, priority = false }) {
-  // Use slug for URL, fallback to _id if slug not available
   const productSlug = product.slug || product._id || product.id;
   
-  // Get primary image or first image
   const primaryImage = product.images?.find(img => img.isPrimary);
   const firstImage = product.images?.[0];
   const productImage = primaryImage?.url || firstImage?.url || firstImage || '/images/placeholder.jpg';
@@ -15,9 +13,9 @@ export default function ProductCard({ product, priority = false }) {
   const modelNumber = product.modelNumber || product.model_number;
 
   return (
-    <div className="w-full max-w-[320px] flex flex-col gap-4 bg-transparent group">
+    <div className="w-full flex flex-col bg-transparent group h-full">
       
-      {/* --- Image Section --- */}
+      {/* Image */}
       <div className="relative aspect-square w-full overflow-hidden rounded-sm bg-gray-100">
         <Link href={`/product/${productSlug}`} className="block relative w-full h-full">
           {productImage && productImage !== '/images/placeholder.jpg' ? (
@@ -25,7 +23,7 @@ export default function ProductCard({ product, priority = false }) {
               src={productImage}
               alt={productName}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               loading={priority ? "eager" : "lazy"}
               priority={priority}
@@ -42,30 +40,30 @@ export default function ProductCard({ product, priority = false }) {
         </Link>
       </div>
 
-      {/* --- Details Section --- */}
-      <div className="flex flex-col gap-3">
+      {/* Details - flex-1 + justify-between keeps button at bottom */}
+      <div className="flex flex-col flex-1 gap-2 pt-3">
         
-        {/* Title */}
-        <Link href={`/product/${productSlug}`}>
-          <h3 className="text-black text-[13px] md:text-sm font-normal leading-relaxed hover:text-[#666141] transition-colors line-clamp-3">
-            {productName}
-          </h3>
-        </Link>
+        {/* Top content */}
+        <div className="flex flex-col gap-1.5 flex-1">
+          <Link href={`/product/${productSlug}`}>
+            <h3 className="text-black text-[13px] md:text-sm font-normal leading-relaxed hover:text-[#666141] transition-colors line-clamp-2">
+              {productName}
+            </h3>
+          </Link>
 
-        {/* Model Number */}
-        {modelNumber && (
-          <span className="text-gray-500 text-xs font-medium">
-            Model: {modelNumber}
+          {modelNumber && (
+            <span className="text-gray-500 text-xs">
+              Model: {modelNumber}
+            </span>
+          )}
+
+          <span className="text-gray-500 text-xs font-light">
+            Customizable
           </span>
-        )}
+        </div>
 
-        {/* Customizable Tag */}
-        <span className="text-gray-600 text-xs font-light">
-          Customizable
-        </span>
-
-        {/* Action Row */}
-        <div className="flex justify-end pt-2">
+        {/* Button always at bottom */}
+        <div className="pt-2">
           <InquiryBtn product={product} />
         </div>
 

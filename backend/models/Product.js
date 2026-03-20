@@ -38,6 +38,13 @@ const productSchema = new mongoose.Schema({
     ref: 'Season',
     default: null
   },
+
+  // Optional Category
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    default: null
+  },
   
   // Images
   images: [{

@@ -4,6 +4,7 @@ import Papa from 'papaparse';
 import Product from '../models/Product.js';
 import Technique from '../models/Technique.js';
 import Season from '../models/Season.js';
+import Category from '../models/Category.js';
 import { uploadToCloudflare } from './upload.js';
 
 const router = express.Router();
@@ -117,18 +118,17 @@ router.post('/parse-csv', upload.single('csv'), async (req, res) => {
       if (!modelNumber) return [];
       
       const matched = [];
-      const modelPrefix = modelNumber.toLowerCase();
+      const modelPrefix = modelNumber.toLowerCase().trim();
       
       Object.keys(imageMapping).forEach(filename => {
-        const filenameLower = filename.toLowerCase();
-        // Match if filename starts with model number
+        const filenameLower = filename.toLowerCase().trim();
         if (filenameLower.startsWith(modelPrefix) || 
             filenameLower.includes(modelPrefix)) {
           matched.push(filename);
         }
       });
       
-      return matched.sort(); // Sort to maintain consistent order
+      return matched.sort();
     };
 
     // Validate and transform each row
@@ -158,9 +158,12 @@ router.post('/parse-csv', upload.single('csv'), async (req, res) => {
             if (item.startsWith('http://') || item.startsWith('https://')) {
               imageUrl = item;
             } 
-            // Check if it's in the uploaded image mapping
+            // Check if it's in the uploaded image mapping (try exact, then normalized)
             else if (imageMapping[item]) {
               imageUrl = imageMapping[item];
+            }
+            else if (imageMapping[item.toLowerCase().trim()]) {
+              imageUrl = imageMapping[item.toLowerCase().trim()];
             }
             // If not found in mapping and not a URL, throw error
             else if (Object.keys(imageMapping).length > 0) {
@@ -214,6 +217,7 @@ router.post('/parse-csv', upload.single('csv'), async (req, res) => {
           brandName: row.brandName?.trim() || undefined,
           technique: row.technique.trim(), // Will be converted to ID later
           season: row.season?.trim() || undefined, // Will be converted to ID later (optional)
+          category: row.category?.trim() || undefined, // Will be converted to ID later (optional)
           images,
           sizes,
           specifications: {
@@ -283,9 +287,10 @@ router.post('/create-products', async (req, res) => {
       });
     }
 
-    // Get all techniques and seasons for mapping
+    // Get all techniques, seasons, and categories for mapping
     const techniques = await Technique.find();
     const seasons = await Season.find();
+    const categories = await Category.find();
 
     const techniqueMap = {};
     techniques.forEach(t => {
@@ -295,6 +300,11 @@ router.post('/create-products', async (req, res) => {
     const seasonMap = {};
     seasons.forEach(s => {
       seasonMap[s.name.toLowerCase()] = s._id;
+    });
+
+    const categoryMap = {};
+    categories.forEach(c => {
+      categoryMap[c.name.toLowerCase()] = c._id;
     });
 
     const created = [];
@@ -323,8 +333,20 @@ router.post('/create-products', async (req, res) => {
             delete productData.season; // Remove if not found
           }
         } else {
-          // Remove empty season field
           delete productData.season;
+        }
+
+        // Map category name to ID (optional)
+        if (productData.category && productData.category.trim() !== '') {
+          const categoryName = productData.category.toLowerCase().trim();
+          const categoryId = categoryMap[categoryName];
+          if (categoryId) {
+            productData.category = categoryId;
+          } else {
+            delete productData.category; // Remove if not found
+          }
+        } else {
+          delete productData.category;
         }
 
         // Remove rowNumber before saving
@@ -385,10 +407,10 @@ router.post('/create-products', async (req, res) => {
 
 // Download CSV template
 router.get('/template', (req, res) => {
-  const template = `name,modelNumber,brandName,technique,season,material,fabric,pattern,style,shape,use,closureType,colorTechnique,placeOfOrigin,description,images,sizes,features,customizationOptions,customizationAvailable,oemService,inStock,featured
-"Handwoven Cotton Cushion Cover","MC-001","Malani","Block Printing","Summer","Cotton","100% Cotton","Floral","Traditional","Square","Home Decor","Zipper","Natural Dyes","Jaipur, India","Beautiful handwoven cushion cover with traditional block printing","MC-001-1.jpg,MC-001-2.jpg","12x12,16x16,18x18","Handmade,Eco-friendly,Washable","Color,Size,Design","TRUE","Available","TRUE","TRUE"
-"Embroidered Silk Table Runner","MC-002","Malani","Hand Embroidery","Winter","Silk","Pure Silk","Geometric","Modern","Rectangle","Table Decor","","Hand Embroidery","Jaipur, India","Elegant silk table runner with intricate hand embroidery","MC-002-1.jpg,MC-002-2.jpg,MC-002-3.jpg","14x72,16x90","Handmade,Premium Quality","Color,Length","TRUE","Available","TRUE","FALSE"
-"Cotton Throw Pillow","MC-003","Malani","Weaving","","Cotton","Cotton Blend","Plain","Casual","Square","Home","Zipper","Natural","India","Comfortable cotton throw pillow","","18x18,20x20","Soft,Durable","Color","TRUE","Available","TRUE","FALSE"`;
+  const template = `name,modelNumber,brandName,technique,season,category,material,fabric,pattern,style,shape,use,closureType,colorTechnique,placeOfOrigin,description,images,sizes,features,customizationOptions,customizationAvailable,oemService,inStock,featured
+"Handwoven Cotton Cushion Cover","MC-001","Malani","Block Printing","Summer","Home Decor","Cotton","100% Cotton","Floral","Traditional","Square","Home Decor","Zipper","Natural Dyes","Jaipur, India","Beautiful handwoven cushion cover with traditional block printing","MC-001-1.jpg,MC-001-2.jpg","12x12,16x16,18x18","Handmade,Eco-friendly,Washable","Color,Size,Design","TRUE","Available","TRUE","TRUE"
+"Embroidered Silk Table Runner","MC-002","Malani","Hand Embroidery","Winter","Table Linen","Silk","Pure Silk","Geometric","Modern","Rectangle","Table Decor","","Hand Embroidery","Jaipur, India","Elegant silk table runner with intricate hand embroidery","MC-002-1.jpg,MC-002-2.jpg,MC-002-3.jpg","14x72,16x90","Handmade,Premium Quality","Color,Length","TRUE","Available","TRUE","FALSE"
+"Cotton Throw Pillow","MC-003","Malani","Weaving","","","Cotton","Cotton Blend","Plain","Casual","Square","Home","Zipper","Natural","India","Comfortable cotton throw pillow","","18x18,20x20","Soft,Durable","Color","TRUE","Available","TRUE","FALSE"`;
 
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename=product-upload-template.csv');

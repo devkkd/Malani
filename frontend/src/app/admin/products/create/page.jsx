@@ -11,6 +11,7 @@ export default function CreateProductPage() {
   const [loading, setLoading] = useState(false);
   const [techniques, setTechniques] = useState([]);
   const [seasons, setSeasons] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -19,6 +20,7 @@ export default function CreateProductPage() {
     brandName: 'Malani Impex Inc',
     technique: '',
     season: '',
+    category: '',
     description: '',
     
     // Images
@@ -83,16 +85,19 @@ export default function CreateProductPage() {
       const token = localStorage.getItem('adminToken');
       const headers = { 'Authorization': `Bearer ${token}` };
       
-      const [techRes, seasonRes] = await Promise.all([
+      const [techRes, seasonRes, catRes] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/techniques`, { headers }),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`, { headers })
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, { headers })
       ]);
 
       const techData = await techRes.json();
       const seasonData = await seasonRes.json();
+      const catData = await catRes.json();
 
       if (techData.success) setTechniques(techData.data);
       if (seasonData.success) setSeasons(seasonData.data);
+      if (catData.success) setCategories(catData.data);
     } catch (error) {
       toast.error('Failed to load data');
     }
@@ -113,6 +118,8 @@ export default function CreateProductPage() {
       const submitData = {
         ...formData,
         season: formData.season || null,
+        category: formData.category || null,
+        images: formData.images.filter(img => img.url && img.url.trim()),
         features: formData.features.filter(f => f.trim()),
         customization: {
           ...formData.customization,
@@ -135,8 +142,10 @@ export default function CreateProductPage() {
         toast.success('Product created successfully!');
         router.push('/admin/products');
       } else {
-        toast.error(data.message || 'Failed to create product');
-        console.error('Error details:', data);
+        const errMsg = data.message || (data.errors?.map(e => e.message).join(', ')) || 'Failed to create product';
+        toast.error(errMsg);
+        console.error('Error details:', JSON.stringify(data, null, 2));
+        console.error('HTTP status:', response.status);
       }
     } catch (error) {
       console.error('Submit error:', error);
@@ -330,6 +339,22 @@ export default function CreateProductPage() {
                 <option value="">No Season</option>
                 {seasons.map(season => (
                   <option key={season._id} value={season._id}>{season.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Category (Optional)
+              </label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#666141] focus:border-transparent outline-none"
+              >
+                <option value="">No Category</option>
+                {categories.map(cat => (
+                  <option key={cat._id} value={cat._id}>{cat.name}</option>
                 ))}
               </select>
             </div>

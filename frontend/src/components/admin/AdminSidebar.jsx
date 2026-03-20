@@ -11,7 +11,8 @@ import {
   ShoppingCart,
   Upload,
   Settings,
-  LogOut
+  LogOut,
+  Tag
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -21,6 +22,7 @@ const menuItems = [
   { icon: Upload, label: 'Bulk Upload', href: '/admin/bulk-upload' },
   { icon: Layers, label: 'Seasons', href: '/admin/seasons' },
   { icon: Palette, label: 'Techniques', href: '/admin/techniques' },
+  { icon: Tag, label: 'Categories', href: '/admin/categories' },
   { icon: MessageSquare, label: 'Inquiries', href: '/admin/inquiries' },
   { icon: ShoppingCart, label: 'Product Inquiries', href: '/admin/product-inquiries' },
   { icon: Settings, label: 'Settings', href: '/admin/settings' },

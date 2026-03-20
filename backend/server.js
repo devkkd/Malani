@@ -18,6 +18,7 @@ import inquiryRoutes from './routes/inquiries.js';
 import productInquiryRoutes from './routes/productInquiries.js';
 import uploadRoutes from './routes/upload.js';
 import bulkUploadRoutes from './routes/bulkUpload.js';
+import categoryRoutes from './routes/categories.js';
 import setupRoutes from './routes/setup.js';
 
 // Load environment variables
@@ -69,8 +70,10 @@ app.use(cors(corsOptions));
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  max: 500, // limit each IP to 500 requests per windowMs
+  message: { success: false, message: 'Too many requests from this IP, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use('/api/', limiter);
 
@@ -105,6 +108,7 @@ app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/product-inquiries', productInquiryRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/bulk-upload', bulkUploadRoutes);
+app.use('/api/categories', categoryRoutes);
 app.use('/api/setup', setupRoutes); // Temporary setup route
 
 // 404 handler

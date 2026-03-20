@@ -328,7 +328,9 @@ const CartPage = () => {
                           </p>
                         )}
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-                          {item.category?.replace("-", " ") || "Collection"}
+                          {typeof item.category === 'object' 
+                            ? (item.category?.name || "Collection")
+                            : (item.category?.replace("-", " ") || "Collection")}
                         </p>
                       </div>
 

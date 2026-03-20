@@ -106,11 +106,11 @@ export default function AdminLoginPage() {
           </form>
 
           {/* Default Credentials Info (Remove in production) */}
-          <div className="mt-6 p-4 bg-[#E9E4B5]/30 rounded-lg border border-[#666141]/20">
+          {/* <div className="mt-6 p-4 bg-[#E9E4B5]/30 rounded-lg border border-[#666141]/20">
             <p className="text-xs text-gray-600 text-center">
               Default credentials: <span className="font-medium">admin</span> / <span className="font-medium">Admin@123</span>
             </p>
-          </div>
+          </div> */}
         </div>
 
         {/* Footer */}

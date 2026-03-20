@@ -18,6 +18,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [techniques, setTechniques] = useState([]);
   const [seasons, setSeasons] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const { inquiries, getTotalItems } = useInquiry();
 
@@ -25,19 +26,24 @@ const Header = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [techRes, seasonRes] = await Promise.all([
+        const [techRes, seasonRes, catRes] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_API_URL}/techniques`),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`)
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`)
         ]);
 
         const techData = await techRes.json();
         const seasonData = await seasonRes.json();
+        const catData = await catRes.json();
 
         if (techData.success) {
           setTechniques(techData.data);
         }
         if (seasonData.success) {
           setSeasons(seasonData.data);
+        }
+        if (catData.success) {
+          setCategories(catData.data);
         }
       } catch (error) {
         console.error('Failed to fetch header data:', error);
@@ -68,14 +74,23 @@ const Header = () => {
     href: `/seasons/${season.slug}`
   }));
 
+  // Convert categories to submenu format for Collection dropdown
+  const categoriesSubmenu = [
+    { name: "All Products", href: "/collection" },
+    ...categories.map(cat => ({
+      name: cat.name,
+      href: `/collection?category=${cat.slug}`
+    }))
+  ];
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About us", href: "/about" },
+    { name: "Collection", href: "/collection", submenu: categoriesSubmenu },
     { name: "Techniques", submenu: techniquesSubmenu },
     { name: "Seasons", submenu: seasonsSubmenu },
     { name: "Empowerment", href: "/empowerment" },
     { name: "Certifications", href: "/certificate" },
-    { name: "FAQ's", href: "/faqs" },
     { name: "Our Process", href: "/process" },
   ];
 
@@ -118,15 +133,23 @@ const Header = () => {
                   }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  {link.href ? (
+                  {link.href && !link.submenu ? (
                     <Link
                       href={link.href}
-                      className="text-[12px] font-medium hover:text-[#666141] transition-colors"
+                      className="text-[14px] font-medium hover:text-[#666141] transition-colors"
                     >
                       {link.name}
                     </Link>
+                  ) : link.href && link.submenu ? (
+                    <Link
+                      href={link.href}
+                      className="text-[14px] font-medium flex items-center gap-0.5 hover:text-[#666141] transition-colors"
+                    >
+                      {link.name}
+                      <ChevronDown className="w-3 h-3" />
+                    </Link>
                   ) : (
-                    <span className="text-[12px] font-medium flex items-center gap-1 cursor-default hover:text-[#666141] transition-colors">
+                    <span className="text-[14px] font-medium flex items-center gap-0.5 cursor-default hover:text-[#666141] transition-colors">
                       {link.name}
                       <ChevronDown className="w-3 h-3" />
                     </span>
@@ -172,19 +195,14 @@ const Header = () => {
               Contact Us <ArrowRight className="w-4 h-4" />
             </Link>
               {/* Alibaba Button */}
-            <a
+            {/* <a
               href="https://malaniimpexinc.trustpass.alibaba.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-[#FF6A00] text-white px-5 py-3 rounded-full text-[12px] font-medium hover:bg-[#E55F00] transition-colors shadow-sm active:scale-95"
             >
-              {/* <img 
-                src="/images/logo/alibaba.png" 
-                alt="Alibaba" 
-                className="w-4 h-4 object-contain"
-              /> */}
               Alibaba
-            </a>
+            </a> */}
           </div>
 
           {/* Mobile Right Section (Cart + Toggle) */}
@@ -217,7 +235,7 @@ const Header = () => {
           <div className="px-6 py-6 pb-24 space-y-6">
             {navLinks.map((link) => (
               <div key={link.name}>
-                {link.href ? (
+                {link.href && !link.submenu ? (
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
@@ -227,7 +245,13 @@ const Header = () => {
                   </Link>
                 ) : (
                   <>
-                    <div className="text-lg font-medium text-[#666141]">{link.name}</div>
+                    <Link
+                      href={link.href || '#'}
+                      onClick={() => !link.href && setOpen(false)}
+                      className="text-lg font-medium block text-[#666141]"
+                    >
+                      {link.name}
+                    </Link>
                     <div className="pl-4 mt-2 space-y-2 border-l border-[#666141]/20">
                       {link.submenu.map((sub) => (
                         <Link

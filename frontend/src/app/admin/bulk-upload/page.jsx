@@ -48,6 +48,9 @@ export default function BulkUploadPage() {
       if (response.data.success) {
         const mapping = {};
         response.data.data.uploaded.forEach(img => {
+          // Normalize key: lowercase + trimmed for case-insensitive lookup
+          mapping[img.filename.toLowerCase().trim()] = img.url;
+          // Also keep original for display purposes
           mapping[img.filename] = img.url;
         });
         setImageMapping(mapping);
@@ -309,6 +312,7 @@ export default function BulkUploadPage() {
               <ul className="text-blue-700 space-y-1.5 ml-4 list-disc">
                 <li><strong>Required:</strong> name, technique</li>
                 <li><strong>Season:</strong> Summer, Winter, Spring, Autumn (optional)</li>
+                <li><strong>Category:</strong> Any category name from admin (optional)</li>
                 <li><strong>Images:</strong> Use filenames (MC-001-1.jpg,MC-001-2.jpg) or URLs or leave empty</li>
                 <li><strong>Multiple values:</strong> Separate with comma (,)</li>
                 <li><strong>Boolean:</strong> TRUE or FALSE</li>

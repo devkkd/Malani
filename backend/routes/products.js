@@ -7,16 +7,23 @@ const router = express.Router();
 // Get all products with filters (Public)
 router.get('/', async (req, res) => {
   try {
-    const { technique, season, featured, search, limit = 50, page = 1 } = req.query;
+    const { technique, season, category, featured, search, limit = 50, page = 1 } = req.query;
     
     const query = { active: true };
     
     if (technique) query.technique = technique;
     if (season) {
       if (season === 'none') {
-        query.season = null; // Products without season
+        query.season = null;
       } else {
         query.season = season;
+      }
+    }
+    if (category) {
+      if (category === 'none') {
+        query.category = null;
+      } else {
+        query.category = category;
       }
     }
     if (featured) query.featured = featured === 'true';
@@ -29,6 +36,7 @@ router.get('/', async (req, res) => {
     const products = await Product.find(query)
       .populate('technique', 'name slug')
       .populate('season', 'name slug')
+      .populate('category', 'name slug')
       .limit(parseInt(limit))
       .skip(skip)
       .sort({ featured: -1, createdAt: -1 });
@@ -133,13 +141,20 @@ router.get('/:identifier', async (req, res) => {
 // Create product (Admin only)
 router.post('/', protect, async (req, res) => {
   try {
-    const product = await Product.create(req.body);
+    // Clean up empty/null refs so Mongoose doesn't complain
+    const body = { ...req.body };
+    if (!body.season) body.season = undefined;
+    if (!body.category) body.category = undefined;
+
+    const product = await Product.create(body);
     const populatedProduct = await Product.findById(product._id)
       .populate('technique', 'name slug')
-      .populate('season', 'name slug');
+      .populate('season', 'name slug')
+      .populate('category', 'name slug');
     
     res.status(201).json({ success: true, data: populatedProduct });
   } catch (error) {
+    console.error('❌ Create product error:', error.message, error.errors);
     res.status(400).json({ 
       success: false, 
       message: error.message,
@@ -154,13 +169,18 @@ router.post('/', protect, async (req, res) => {
 // Update product (Admin only)
 router.put('/:id', protect, async (req, res) => {
   try {
+    const body = { ...req.body };
+    if (!body.season) body.season = undefined;
+    if (!body.category) body.category = undefined;
+
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      body,
       { new: true, runValidators: true }
     )
     .populate('technique', 'name slug')
-    .populate('season', 'name slug');
+    .populate('season', 'name slug')
+    .populate('category', 'name slug');
 
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
