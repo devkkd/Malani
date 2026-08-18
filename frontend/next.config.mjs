@@ -1,28 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack configuration (Next.js 16+)
+  // Silence the "webpack config but no turbopack config" warning
+  // root points Turbopack to this frontend directory, avoiding the lockfile warning
   turbopack: {
-    // Empty config to silence the warning
-    // Turbopack will use default settings
+    root: process.cwd(),
   },
-  
-  // Memory optimization
-  experimental: {
-    // Reduce memory usage during build
-    workerThreads: false,
-    cpus: 1,
-  },
-  
-  // Output optimization
-  output: 'standalone',
-  
-  // Reduce bundle size
+
+  // compiler options
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
   },
-  
+
   // Image optimization
   images: {
     remotePatterns: [
@@ -40,29 +30,6 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-  
-  // Webpack optimization
-  webpack: (config, { isServer }) => {
-    // Reduce memory usage
-    config.optimization = {
-      ...config.optimization,
-      minimize: true,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          commons: {
-            name: 'commons',
-            chunks: 'all',
-            minChunks: 2,
-          },
-        },
-      },
-    };
-    
-    return config;
   },
 };
 

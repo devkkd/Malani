@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 
 const neiko = localFont({
@@ -52,7 +53,22 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={neiko.variable}>
-      <body>{children}</body>
+      <body>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-9P4W6D6MG0"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-9P4W6D6MG0');
+          `}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
