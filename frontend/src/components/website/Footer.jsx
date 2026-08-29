@@ -259,11 +259,11 @@ const Footer = () => {
                     className="w-9 h-9 flex items-center justify-center bg-[#1877F2] text-white rounded-full hover:opacity-90 transition-opacity">
                     <Facebook size={16} />
                   </a>
-                  <a href="#" aria-label="YouTube"
+                  <a href="https://www.youtube.com/@malaniimpex2984" aria-label="YouTube"
                     className="w-9 h-9 flex items-center justify-center bg-[#FF0000] text-white rounded-full hover:opacity-90 transition-opacity">
                     <Youtube size={16} />
                   </a>
-                  <a href="#" aria-label="LinkedIn"
+                  <a href="https://www.linkedin.com/in/malani-impex-bb288040/" aria-label="LinkedIn"
                     className="w-9 h-9 flex items-center justify-center bg-[#0077B5] text-white rounded-full hover:opacity-90 transition-opacity">
                     <Linkedin size={16} />
                   </a>
