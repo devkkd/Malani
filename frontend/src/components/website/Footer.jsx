@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import {
   Instagram,
   Facebook,
@@ -14,7 +15,28 @@ import Container from './Container';
 import QRCode from './QRCode';
 
 const Footer = () => {
-  const footerLinks = [
+  const [techniques, setTechniques] = useState([]);
+  const [seasons, setSeasons] = useState([]);
+
+  useEffect(() => {
+    // Fetch techniques
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/techniques`)
+      .then(r => r.json())
+      .then(res => {
+        if (res.success && res.data) setTechniques(res.data);
+      })
+      .catch(() => {});
+
+    // Fetch seasons
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/seasons`)
+      .then(r => r.json())
+      .then(res => {
+        if (res.success && res.data) setSeasons(res.data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const staticLinks = [
     {
       title: 'About us',
       links: [
@@ -23,27 +45,6 @@ const Footer = () => {
         { name: 'Certifications', href: '/certificate' },
         { name: 'Empowerment', href: '/empowerment' },
         { name: 'Contact Us', href: '/contact' },
-      ],
-    },
-    {
-      title: 'Techniques',
-      links: [
-        { name: 'All Techniques', href: '/techniquess' },
-        { name: 'Block Printing', href: '/techniquess/block-printing' },
-        { name: 'Dabu Print', href: '/techniquess/dabu-print' },
-        { name: 'Screen Print', href: '/techniquess/screen-print' },
-        { name: 'Hand Embroidery', href: '/techniquess/hand-embroidery' },
-        { name: 'Applique Work', href: '/techniquess/applique-work' },
-      ],
-    },
-    {
-      title: 'All Seasons',
-      links: [
-        { name: 'All Seasons', href: '/seasons' },
-        { name: 'Summer Collection', href: '/seasons/summer-collection' },
-        { name: 'Festival Collection', href: '/seasons/festival-collection' },
-        { name: 'Winter Collection', href: '/seasons/winter-collection' },
-        { name: 'View Collection', href: '/collection' },
       ],
     },
     {
@@ -113,7 +114,9 @@ const Footer = () => {
           </div>
 
           <div className="xl:w-3/4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-            {footerLinks.map((column) => (
+
+            {/* Static columns */}
+            {staticLinks.map((column) => (
               <div key={column.title}>
                 <h4 className="font-medium text-black mb-4">{column.title}</h4>
                 <ul className="space-y-2">
@@ -127,6 +130,51 @@ const Footer = () => {
                 </ul>
               </div>
             ))}
+
+            {/* Dynamic: Techniques */}
+            <div>
+              <h4 className="font-medium text-black mb-4">Techniques</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/techniquess" className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors">
+                    All Techniques
+                  </Link>
+                </li>
+                {techniques.slice(0, 5).map((tech) => (
+                  <li key={tech._id}>
+                    <Link
+                      href={`/techniquess/${tech.slug}`}
+                      className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors"
+                    >
+                      {tech.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Dynamic: Seasons */}
+            <div>
+              <h4 className="font-medium text-black mb-4">All Seasons</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/seasons" className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors">
+                    All Seasons
+                  </Link>
+                </li>
+                {seasons.slice(0, 5).map((season) => (
+                  <li key={season._id}>
+                    <Link
+                      href={`/seasons/${season.slug}`}
+                      className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors"
+                    >
+                      {season.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </div>
 
