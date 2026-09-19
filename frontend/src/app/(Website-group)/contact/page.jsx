@@ -312,14 +312,16 @@ const ContactPage = () => {
               <div className="space-y-8 text-sm md:text-lg">
                 <div className="space-y-2">
                   <h4 className="text-black font-medium">Contact Us</h4>
-                  <p className="text-gray-600">+91-123567890 | +91-123567890</p>
-                  <p className="text-gray-600">info@malaniimpex.com</p>
-                  <p className="text-gray-600">wholesale@malaniimpex.com</p>
+                  <p className="text-gray-600">+91-141-2398641<br></br>+91-141-2401352</p>
+                  <p className="text-gray-600">malani.inc@gmail.com2</p>
+                  {/* <p className="text-gray-600">wholesale@malaniimpex.com</p> */}
                 </div>
 
                 <div className="space-y-2">
                   <h4 className="text-black font-medium">Location</h4>
-                  <p className="text-gray-600">Jaipur, Rajasthan India - 302001 INDIA</p>
+                  <p className="text-gray-600">E-192, RICO Industrial Area
+Mansarovar, <br></br> Jaipur - 302020
+Rajasthan (INDIA)</p>
                 </div>
 
                 <div className="space-y-2">
