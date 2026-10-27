@@ -92,6 +92,7 @@ const Header = () => {
     { name: "Empowerment", href: "/empowerment" },
     { name: "Certifications", href: "/certificate" },
     { name: "Our Process", href: "/process" },
+    // { name: "Blog", href: "/blog" },
   ];
 
   return (

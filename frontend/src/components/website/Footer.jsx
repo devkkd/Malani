@@ -61,6 +61,7 @@ const Footer = () => {
       title: 'Quick Links',
       links: [
         { name: 'Collection', href: '/collection' },
+        { name: 'Blog', href: '/blog' },
         { name: 'Certifications', href: '/certificate' },
         { name: 'Contact Us', href: '/contact' },
         { name: 'Our Process', href: '/process' },

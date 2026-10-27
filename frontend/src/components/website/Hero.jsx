@@ -5,8 +5,8 @@ import Image from "next/image";
 
 const slides = [
     "/images/home/slider1.webp",
-    "/images/slider-1.svg",
-    "/images/slider-2.svg",
+    "/images/slider-1.webp",
+    "/images/slider-2.webp",
 ];
 
 export default function Hero() {

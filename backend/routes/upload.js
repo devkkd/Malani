@@ -87,11 +87,13 @@ export const uploadToCloudflare = async (buffer, originalFilename) => {
 };
 
 // Upload image to Cloudflare R2
+// Accepts optional `folder` in body (default: "products", can be "blogs")
 router.post('/image', protect, async (req, res) => {
   try {
-    const { image } = req.body; // Base64 image data
+    const { image, folder = 'products' } = req.body; // Base64 image data
+    const safeFolder = ['products', 'blogs'].includes(folder) ? folder : 'products';
     
-    console.log('📤 Upload request received');
+    console.log('📤 Upload request received, folder:', safeFolder);
     
     if (!image) {
       console.log('❌ No image data provided');
@@ -123,7 +125,7 @@ router.post('/image', protect, async (req, res) => {
 
     // Generate unique filename
     const imageId = crypto.randomBytes(16).toString('hex');
-    const filename = `products/${imageId}.jpg`;
+    const filename = `${safeFolder}/${imageId}.jpg`;
 
     console.log('☁️  Uploading to Cloudflare R2...');
 

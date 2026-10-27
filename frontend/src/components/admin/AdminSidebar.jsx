@@ -12,7 +12,8 @@ import {
   Upload,
   Settings,
   LogOut,
-  Tag
+  Tag,
+  BookOpen
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -23,6 +24,7 @@ const menuItems = [
   { icon: Layers, label: 'Seasons', href: '/admin/seasons' },
   { icon: Palette, label: 'Techniques', href: '/admin/techniques' },
   { icon: Tag, label: 'Categories', href: '/admin/categories' },
+  { icon: BookOpen, label: 'Blog', href: '/admin/blogs' },
   { icon: MessageSquare, label: 'Inquiries', href: '/admin/inquiries' },
   { icon: ShoppingCart, label: 'Product Inquiries', href: '/admin/product-inquiries' },
   { icon: Settings, label: 'Settings', href: '/admin/settings' },

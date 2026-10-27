@@ -60,3 +60,113 @@ body {
 .animate-slideUp {
   animation: slideUp 0.4s ease-out;
 }
+
+/* ── Blog Content Prose Styles (prose-malani) ─────────────────── */
+.prose-malani {
+  color: #000;
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.prose-malani h1,
+.prose-malani h2,
+.prose-malani h3,
+.prose-malani h4 {
+  color: #000;
+  font-weight: 400;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.prose-malani h1 { font-size: 2.25rem; }
+.prose-malani h2 { font-size: 1.75rem; color: #666141; }
+.prose-malani h3 { font-size: 1.375rem; }
+.prose-malani h4 { font-size: 1.125rem; }
+
+.prose-malani p {
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.prose-malani a {
+  color: #666141;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose-malani a:hover { opacity: 0.75; }
+
+.prose-malani strong { font-weight: 600; color: #000; }
+.prose-malani em { font-style: italic; }
+
+.prose-malani ul,
+.prose-malani ol {
+  margin: 1.25rem 0 1.5rem 1.5rem;
+  space-y: 0.5rem;
+}
+
+.prose-malani ul { list-style-type: disc; }
+.prose-malani ol { list-style-type: decimal; }
+
+.prose-malani li {
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+.prose-malani blockquote {
+  border-left: 3px solid #666141;
+  padding-left: 1.25rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: #000;
+  opacity: 0.75;
+}
+
+.prose-malani img {
+  width: 100%;
+  border-radius: 2px;
+  margin: 2rem 0;
+  object-fit: cover;
+}
+
+.prose-malani hr {
+  border: none;
+  border-top: 1px solid rgba(102, 97, 65, 0.2);
+  margin: 3rem 0;
+}
+
+.prose-malani code {
+  background: rgba(102, 97, 65, 0.08);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.875rem;
+}
+
+.prose-malani pre {
+  background: #f5f4ec;
+  padding: 1.25rem 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+
+.prose-malani table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+}
+
+.prose-malani th {
+  background: rgba(102, 97, 65, 0.08);
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid rgba(102, 97, 65, 0.2);
+  font-weight: 600;
+}
+
+.prose-malani td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(102, 97, 65, 0.1);
+}

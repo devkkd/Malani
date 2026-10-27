@@ -22,6 +22,7 @@ import productInquiryRoutes from './routes/productInquiries.js';
 import uploadRoutes from './routes/upload.js';
 import bulkUploadRoutes from './routes/bulkUpload.js';
 import categoryRoutes from './routes/categories.js';
+import blogRoutes from './routes/blogs.js';
 import setupRoutes from './routes/setup.js';
 
 // Load environment variables
@@ -112,6 +113,7 @@ app.use('/api/product-inquiries', productInquiryRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/bulk-upload', bulkUploadRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/blogs', blogRoutes);
 app.use('/api/setup', setupRoutes); // Temporary setup route
 
 // 404 handler
