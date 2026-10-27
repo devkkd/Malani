@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 const slides = [
-    "/images/home/slider1.jpg",
+    "/images/home/slider1.webp",
     "/images/slider-1.svg",
     "/images/slider-2.svg",
 ];
@@ -120,7 +120,7 @@ export default function Hero() {
                         {/* Smaller portrait image on the right — desktop xl only */}
                         <div className="hidden xl:block w-48 h-64 flex-shrink-0 relative">
                             <Image
-                                src="/images/home/slider2.jpg"
+                                src="/images/home/slider2.webp"
                                 alt="Handcrafted textile detail"
                                 fill
                                 sizes="192px"
@@ -149,7 +149,7 @@ export default function Hero() {
 
                         <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">
                             <Image
-                                src="/images/home/home3.png"
+                                src="/images/home/home3.webp"
                                 alt="Artisan at work"
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 25vw"
@@ -160,7 +160,7 @@ export default function Hero() {
                         </div>
                         <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">
                             <Image
-                                src="/images/home/home4.png"
+                                src="/images/home/home4.webp"
                                 alt="Craft detail"
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 25vw"
@@ -171,7 +171,7 @@ export default function Hero() {
                         </div>
                         <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">
                             <Image
-                                src="/images/home/home5.png"
+                                src="/images/home/home5.webp"
                                 alt="Textile detail"
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 25vw"
@@ -183,7 +183,7 @@ export default function Hero() {
                         {/* Mobile-only 4th image — only rendered on small screens via JS to avoid downloading on desktop */}
                         <div className="h-32 overflow-hidden relative transition duration-500 sm:hidden">
                             <Image
-                                src="/images/home/slider3.jpg"
+                                src="/images/home/slider3.webp"
                                 alt="Textile showcase"
                                 fill
                                 sizes="50vw"

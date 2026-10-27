@@ -2,13 +2,26 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Container from '@/components/website/Container';
-import HomeTechniquesSection from '@/components/website/HomeTechniquesSection';
-import HomeSeasonsSection from '@/components/website/HomeSeasonsSection';
-import HeroSection from '@/components/website/HeroSection';
 import Hero from '@/components/website/Hero';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import EthicalFoundation from '@/components/website/EthicalData';
+
+// Lazy load below-the-fold heavy components — reduces initial JS bundle
+const HomeTechniquesSection = dynamic(
+  () => import('@/components/website/HomeTechniquesSection'),
+  { ssr: false, loading: () => null }
+);
+
+const HomeSeasonsSection = dynamic(
+  () => import('@/components/website/HomeSeasonsSection'),
+  { ssr: false, loading: () => null }
+);
+
+const EthicalFoundation = dynamic(
+  () => import('@/components/website/EthicalData'),
+  { ssr: false, loading: () => null }
+);
 
 const HomePage = () => {
   // --- STATE: Slider Logic ---
@@ -224,7 +237,7 @@ const HomePage = () => {
         <Container>
           <div className="mt-8 relative w-full aspect-[16/7] overflow-hidden">
             <Image
-              src="/images/about/about1.jpg"
+              src="/images/about/about1.webp"
               alt="Malani Impex building"
               fill
               sizes="(max-width: 768px) 100vw, 90vw"
@@ -459,9 +472,9 @@ const HomePage = () => {
             {/* Image Grid (3 Images) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
               {[
-                '/images/empowerment/empowerment1.jpg',
-                '/images/empowerment/empowerment2.jpg',
-                '/images/empowerment/empowerment3.jpg'
+                '/images/empowerment/empowerment1.webp',
+                '/images/empowerment/empowerment2.webp',
+                '/images/empowerment/empowerment3.webp'
               ].map((src, index) => (
                 <div key={index} className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-gray-100">
                   <Image
