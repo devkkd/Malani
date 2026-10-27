@@ -65,7 +65,7 @@ const Header = () => {
   // Convert techniques to submenu format
   const techniquesSubmenu = techniques.map(tech => ({
     name: tech.name,
-    href: `/techniquess/${tech.slug}`
+    href: `/techniques/${tech.slug}`
   }));
 
   // Convert seasons to submenu format
@@ -87,8 +87,8 @@ const Header = () => {
     { name: "Home", href: "/" },
     { name: "About us", href: "/about" },
     { name: "Collection", href: "/collection", submenu: categoriesSubmenu },
-    { name: "Techniques", submenu: techniquesSubmenu },
-    { name: "Seasons", submenu: seasonsSubmenu },
+    { name: "Techniques", href: "/techniques", submenu: techniquesSubmenu },
+    { name: "Seasons", href: "/seasons", submenu: seasonsSubmenu },
     { name: "Empowerment", href: "/empowerment" },
     { name: "Certifications", href: "/certificate" },
     { name: "Our Process", href: "/process" },

@@ -69,30 +69,7 @@
       "/images/techniques/technique6.jpg"
     ]
   },
-  {
-    "id": "digital-print",
-    "title": "Digital Print",
-    "subtitle": "Modern Technology, Timeless Quality",
-    "description1": "Digital printing brings contemporary design possibilities to traditional Indian textiles. While technology assisted, each piece is carefully monitored by our experienced artisans to ensure exceptional quality and color vibrancy.",
-    "description2": "",
-    "processTitle": "Our Meticulous Process",
-    "checklist": [
-      "Designs thoughtfully created or adapted digitally",
-      "Premium fabric carefully prepared for optimal ink absorption",
-      "Eco-friendly, AZO-free digital inks selected",
-      "Printing expertly supervised for color accuracy",
-      "Heat-setting process ensuring lasting vibrancy",
-      "Thorough quality inspection by experienced artisans"
-    ],
-    "stats": [
-      { "icon": "time", "label": "Time Investment", "value": "1 day per distinguished piece" },
-      { "icon": "artisans", "label": "Master Artisans", "value": "200+ Specializing" }
-    ],
-    "images": [
-      "/images/techniques/technique7.jpg",
-      "/images/techniques/technique8.jpg"
-    ]
-  },
+ 
   {
     "id": "chikan-embroidery",
     "title": "Chikan Embroidery",
@@ -117,30 +94,7 @@
       "/images/techniques/technique10.jpg"
     ]
   },
-  {
-    "id": "chikan-comp",
-    "title": "Chikan Embroidery (Computerized)",
-    "subtitle": "Traditional Artistry Enhanced by Modern Precision",
-    "description1": "Computerized Chikan embroidery honors traditional patterns while employing modern technology for consistency.",
-    "description2": "Our artisans carefully program and supervise each piece, ensuring the soulful beauty of Chikan remains intact.",
-    "processTitle": "Our Meticulous Process",
-    "checklist": [
-      "Traditional Chikan patterns thoughtfully digitized",
-      "Premium fabric carefully prepared and positioned",
-      "Computerized embroidery expertly supervised by trained artisans",
-      "Multiple passes creating layered depth",
-      "Hand-finishing touches added by skilled artisans",
-      "Thorough quality inspection ensuring authentic appearance"
-    ],
-    "stats": [
-      { "icon": "time", "label": "Time Investment", "value": "2-4 days per distinguished piece" },
-      { "icon": "artisans", "label": "Master Artisans", "value": "250+ Specializing" }
-    ],
-    "images": [
-      "/images/techniques/technique11.jpg",
-      "/images/techniques/technique12.jpg"
-    ]
-  },
+
   {
     "id": "machine-embroidery",
     "title": "Machine Embroidery",

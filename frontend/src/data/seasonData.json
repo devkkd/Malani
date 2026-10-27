@@ -156,59 +156,5 @@
         ]
       }
     ]
-  },
-  {
-    "id": "classics",
-    "title": "Year-Round Classics Collection",
-    "subtitle": "Timeless Elegance for Every Season",
-    "description": "Some pieces transcend seasons designs so perfectly balanced and enduring that they remain beautiful throughout the year. Our Year-Round Classics Collection features these timeless foundations of your home’s aesthetic.",
-    "icon": "/images/seasons/seasonIcon4.png",
-    "features": [
-      {
-        "heading": "Premium Materials",
-        "items": [
-          "Medium-weight premium cotton in perfect balance",
-          "Versatile cotton-linen blends",
-          "Classic, durable weaves",
-          "Natural fibers in transitional weights",
-          "Pre-washed fabrics that age beautifully",
-          "Colorfast, fade-resistant textiles"
-        ]
-      },
-      {
-        "heading": "Featured Techniques",
-        "items": [
-          "Classic hand block printing in timeless patterns",
-          "Elegant, moderate embroidery",
-          "Traditional geometric designs",
-          "Versatile screen prints",
-          "Refined appliqué work",
-          "Subtle, sophisticated embellishment"
-        ]
-      },
-      {
-        "heading": "Signature Color Palette",
-        "items": [
-          "Sophisticated neutrals taupe, greige, warm grey",
-          "Classic navy and deep indigo",
-          "Timeless black and crisp white",
-          "Warm natural earth tones",
-          "Soft muted jewel tones",
-          "Elegant two-color combinations"
-        ]
-      },
-      {
-        "heading": "Perfect For",
-        "items": [
-          "Foundation cushion covers for any décor style",
-          "Versatile throws for year round use",
-          "Classic table linens for daily and special occasions",
-          "Transitional upholstery fabrics",
-          "Timeless bedding essentials",
-          "Professional and residential spaces alike",
-          "Gift-giving for any occasion"
-        ]
-      }
-    ]
   }
 ]

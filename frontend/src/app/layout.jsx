@@ -19,8 +19,8 @@ const neiko = localFont({
 });
 
 export const metadata = {
-  title: "Malani Impex - Premium Textile Manufacturer",
-  description: "Leading manufacturer and exporter of premium textiles, rugs, and home furnishings. Discover our handcrafted collections.",
+  title: "Textile Manufacturer in India | Handcrafted Home Textiles",
+  description: "Leading textile manufacturer and exporter in India. Handcrafted home textiles, block print and wholesale cushion covers for retailers worldwide since 1981.",
   verification: {
     google: "NotuF9LW2OkufpgYMb2grHOFOgWYFJe3TfEhj_VltRQ",
   },

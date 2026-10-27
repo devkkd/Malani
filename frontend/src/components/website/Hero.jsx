@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 const slides = [
     "/images/home/slider1.jpg",
@@ -33,11 +34,20 @@ export default function Hero() {
                 
                 {/* ================= SLIDER ================= */}
                 <div className="relative w-full h-[50vh] lg:w-[37%] lg:h-full overflow-hidden flex-shrink-0">
-                    <img
-                        src={slides[active]}
-                        alt="Slide"
-                        className="absolute inset-0 w-full h-full object-cover"
-                    />
+                    {/* Preload all slide images, show only active one */}
+                    {slides.map((src, i) => (
+                        <Image
+                            key={src}
+                            src={src}
+                            alt={i === 0 ? "Malani Impex handcrafted textiles" : `Slide ${i + 1}`}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 37vw"
+                            className={`object-cover transition-opacity duration-500 ${active === i ? "opacity-100" : "opacity-0"}`}
+                            priority={i === 0}
+                            loading={i === 0 ? "eager" : "lazy"}
+                            quality={85}
+                        />
+                    ))}
                 
                     {/* Previous Arrow - Centered Vertically */}
                     <button
@@ -45,7 +55,7 @@ export default function Hero() {
                         className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full text-[#6b6a45] flex items-center justify-center transition-all"
                         aria-label="Previous slide"
                     >
-                        <img src="/images/left.png" alt="Previous" />
+                        <Image src="/images/left.png" alt="Previous" width={40} height={40} />
                     </button>
 
                     {/* Next Arrow - Centered Vertically */}
@@ -54,7 +64,7 @@ export default function Hero() {
                         className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full text-[#6b6a45] flex items-center justify-center transition-all"
                         aria-label="Next slide"
                     >
-                        <img src="/images/right.png" alt="Next" />
+                        <Image src="/images/right.png" alt="Next" width={40} height={40} />
                     </button>
 
                     {/* Slide Indicators */}
@@ -86,15 +96,15 @@ export default function Hero() {
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-10">
                         <div className="max-w-md">
                             {/* Mobile heading */}
-                            <h1 className="lg:hidden text-5xl tracking-tight leading-none">
+                            <p className="lg:hidden text-5xl tracking-tight leading-none">
                                 <span className="text-[#6b6a45]">malani</span>
                                 <span className="ml-4 text-[#6b6a45]">impex</span>
-                            </h1>
+                            </p>
                             
                             {/* Desktop "impex" only */}
-                            <h1 className="hidden lg:block text-8xl xl:text-9xl font-medium tracking-tight text-[#6b6a45] leading-none mb-10 -mt-5">
+                            <p className="hidden lg:block text-8xl xl:text-9xl font-medium tracking-tight text-[#6b6a45] leading-none mb-10 -mt-5">
                                 impex
-                            </h1>
+                            </p>
                             
                             <div className="space-y-4">
                                 <p className="text-2xl md:text-3xl text-neutral-800 font-medium leading-tight">
@@ -107,12 +117,16 @@ export default function Hero() {
                             </div>
                         </div>
 
-                        {/* Smaller portrait image on the right */}
-                        <div className="hidden xl:block w-48 h-64 flex-shrink-0">
-                            <img
+                        {/* Smaller portrait image on the right — desktop xl only */}
+                        <div className="hidden xl:block w-48 h-64 flex-shrink-0 relative">
+                            <Image
                                 src="/images/home/slider2.jpg"
-                                alt="Detail"
-                                className="w-full h-full object-cover rounded-sm shadow-lg"
+                                alt="Handcrafted textile detail"
+                                fill
+                                sizes="192px"
+                                className="object-cover rounded-sm shadow-lg"
+                                loading="lazy"
+                                quality={80}
                             />
                         </div>
                     </div>
@@ -131,20 +145,52 @@ export default function Hero() {
                             >
                                 Discover Our Artisans →
                             </button>
-
                         </div>
 
-                        <div className="h-32 lg:h-44 overflow-hidden  transition duration-500">
-                            <img src="/images/home/home3.png" className="w-full h-full object-cover" alt="Artisan" />
+                        <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">
+                            <Image
+                                src="/images/home/home3.png"
+                                alt="Artisan at work"
+                                fill
+                                sizes="(max-width: 1024px) 50vw, 25vw"
+                                className="object-cover"
+                                loading="lazy"
+                                quality={80}
+                            />
                         </div>
-                        <div className="h-32 lg:h-44 overflow-hidden transition duration-500">
-                            <img src="/images/home/home4.png" className="w-full h-full object-cover" alt="Craft" />
+                        <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">
+                            <Image
+                                src="/images/home/home4.png"
+                                alt="Craft detail"
+                                fill
+                                sizes="(max-width: 1024px) 50vw, 25vw"
+                                className="object-cover"
+                                loading="lazy"
+                                quality={80}
+                            />
                         </div>
-                        <div className="h-32 lg:h-44 overflow-hidden transition duration-500">
-                            <img src="/images/home/home5.png" className="w-full h-full object-cover" alt="Detail" />
+                        <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">
+                            <Image
+                                src="/images/home/home5.png"
+                                alt="Textile detail"
+                                fill
+                                sizes="(max-width: 1024px) 50vw, 25vw"
+                                className="object-cover"
+                                loading="lazy"
+                                quality={80}
+                            />
                         </div>
-                        <div className="h-32 lg:h-44 overflow-hidden sm:hidden transition duration-500">
-                            <img src="/images/home/slider3.jpg" className="w-full h-full object-cover" alt="Detail" />
+                        {/* Mobile-only 4th image — only rendered on small screens via JS to avoid downloading on desktop */}
+                        <div className="h-32 overflow-hidden relative transition duration-500 sm:hidden">
+                            <Image
+                                src="/images/home/slider3.jpg"
+                                alt="Textile showcase"
+                                fill
+                                sizes="50vw"
+                                className="object-cover"
+                                loading="lazy"
+                                quality={80}
+                            />
                         </div>
                     </div>
                 </div>

@@ -133,7 +133,9 @@ const HomeTechniquesSection = () => {
                                    src={img.url || img} 
                                    alt={img.alt || `${tech.name} Detail ${i+1}`}
                                    fill
+                                   sizes="(max-width: 1024px) 50vw, 30vw"
                                    className="object-cover"
+                                   loading="lazy"
                                 />
                              </div>
                           ))}
@@ -154,7 +156,7 @@ const HomeTechniquesSection = () => {
 
                       {/* CTA */}
                       <Link 
-                         href={`/techniquess/${tech.slug}`} 
+                         href={`/techniques/${tech.slug}`} 
                          className="inline-block text-sm font-medium text-[#666141] hover:underline"
                       >
                          View Details →
@@ -237,7 +239,9 @@ const HomeTechniquesSection = () => {
                                   src={img.url || img} 
                                   alt={img.alt || `${activeData.name} Detail ${i+1}`}
                                   fill
+                                  sizes="(max-width: 1280px) 50vw, 35vw"
                                   className="object-cover hover:scale-105 transition-transform duration-700"
+                                  loading="lazy"
                                />
                             </div>
                          ))}
@@ -247,7 +251,7 @@ const HomeTechniquesSection = () => {
                     {/* CTA Button */}
                     <div>
                        <Link 
-                          href={`/techniquess/${activeData.slug}`} 
+                          href={`/techniques/${activeData.slug}`} 
                           className="inline-block bg-[#666141] text-[#FFFEF5] px-8 py-4 rounded-full text-base font-medium hover:bg-[#555135] transition-colors shadow-md"
                        >
                           See All {activeData.name} →

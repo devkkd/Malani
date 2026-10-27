@@ -222,8 +222,16 @@ const HomePage = () => {
       </section>
       <section className="w-full py-8 px-4 md:px-8">
         <Container>
-          <div className='mt-8' >
-            <img src="images/about/about1.jpg" alt="building" />
+          <div className="mt-8 relative w-full aspect-[16/7] overflow-hidden">
+            <Image
+              src="/images/about/about1.jpg"
+              alt="Malani Impex building"
+              fill
+              sizes="(max-width: 768px) 100vw, 90vw"
+              className="object-cover"
+              loading="lazy"
+              quality={85}
+            />
           </div>
           {/* --- Section: Stats Row --- */}
           <div className="py-8 ">
@@ -456,10 +464,14 @@ const HomePage = () => {
                 '/images/empowerment/empowerment3.jpg'
               ].map((src, index) => (
                 <div key={index} className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-gray-100">
-                  <img
+                  <Image
                     src={src}
                     alt={`Artisan Journey ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                    quality={80}
                   />
                 </div>
               ))}
@@ -494,10 +506,13 @@ const HomePage = () => {
                 <div key={index} className="flex flex-col items-center text-center space-y-6 px-4">
                   {/* Icon */}
                   <div className="relative w-16 h-16 md:w-20 md:h-20">
-                    <img
+                    <Image
                       src={item.icon}
                       alt={item.title}
-                      className="w-full h-full object-contain"
+                      fill
+                      sizes="80px"
+                      className="object-contain"
+                      loading="lazy"
                     />
                   </div>
                   {/* Content */}
@@ -536,10 +551,13 @@ const HomePage = () => {
                 <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-start">
                   {/* Dispose Icon */}
                   <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0">
-                    <img
+                    <Image
                       src="/images/about/aboutIcon14.png"
                       alt="Dispose Responsibly Icon"
-                      className="w-full h-full object-contain"
+                      fill
+                      sizes="96px"
+                      className="object-contain"
+                      loading="lazy"
                     />
                   </div>
 

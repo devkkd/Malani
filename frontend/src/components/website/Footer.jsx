@@ -136,14 +136,14 @@ const Footer = () => {
               <h4 className="font-medium text-black mb-4">Techniques</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/techniquess" className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors">
+                  <Link href="/techniques" className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors">
                     All Techniques
                   </Link>
                 </li>
                 {techniques.slice(0, 5).map((tech) => (
                   <li key={tech._id}>
                     <Link
-                      href={`/techniquess/${tech.slug}`}
+                      href={`/techniques/${tech.slug}`}
                       className="text-[13px] text-gray-900 hover:text-[#666141] transition-colors"
                     >
                       {tech.name}

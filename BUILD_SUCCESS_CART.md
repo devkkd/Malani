@@ -36,8 +36,8 @@ npm run build:memory
 - ✅ `/cart` - **Cart page (NEW!)**
 - ✅ `/seasons` - Seasons listing
 - ✅ `/seasons/[id]` - Season details
-- ✅ `/techniquess` - Techniques listing
-- ✅ `/techniquess/[id]` - Technique details
+- ✅ `/techniques` - Techniques listing
+- ✅ `/techniques/[id]` - Technique details
 - ✅ `/product/[id]` - **Product details with Add to Cart**
 - ✅ `/certificate` - Certifications
 - ✅ `/contact` - Contact page
