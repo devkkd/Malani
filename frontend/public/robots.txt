@@ -1,11 +1,37 @@
 # Malani Impex - Legitimate Business Website
+
+# All crawlers
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /api/
+
+# Google
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+
+# ChatGPT (OpenAI)
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+
+# Claude (Anthropic)
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin/
+
+# Perplexity
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin/
 
 # Sitemap
 Sitemap: https://www.malaniimpexinc.com/sitemap.xml
-
-# Crawl-delay for respectful crawling
-Crawl-delay: 1
