@@ -29,8 +29,6 @@ export default async function sitemap() {
     { url: `${BASE}/seasons/year-round-classics-collection`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/blog`,        changeFrequency: 'daily',   priority: 0.8 },
     { url: `${BASE}/contact`,     changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE}/privacy-policy`,       changeFrequency: 'yearly', priority: 0.4 },
-    { url: `${BASE}/terms-and-conditions`, changeFrequency: 'yearly', priority: 0.4 },
   ].map((r) => ({ ...r, lastModified: lastmod }));
 
   // Dynamic blog post URLs

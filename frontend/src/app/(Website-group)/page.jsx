@@ -190,7 +190,7 @@ const HomePage = () => {
 
               <div className="space-y-6 text-black text-sm md:text-base leading-relaxed opacity-90">
                 <p>
-                  Since our founding in 1981, we have dedicated ourselves to a noble purpose: weaving dreams alongside textiles, nurturing communities, and safeguarding India's magnificent artisan traditions.
+                  Since our establishment in 1981, we are now a reputable home furnishing manufacturers in jaipur and an Indian home textile supplier to customers all over the world. Our main goal is to working on this dream of weaving together and people to protect Indian artisans' heritage.
                 </p>
               </div>
 

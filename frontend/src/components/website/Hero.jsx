@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const slides = [
     "/images/home/slider1.webp",
@@ -112,7 +113,7 @@ export default function Hero() {
                                     Celebrating Indian Artisans Since 1981
                                 </p>
                                 <p className="text-sm md:text-base text-neutral-700 leading-relaxed">
-                                    Immerse yourself in the world of exquisitely handcrafted textiles that honor centuries-old heritage, champion women's empowerment, and embody sustainable luxury.
+                                   Malani impex is a textile manufacturer in Jaipur, India, create handmade home textiles, block print cushion covers, poufs etc. Our home furnishings exporter honor old heritage since centuries, champion women’s empowerment and embody sustainable luxury.
                                 </p>
                             </div>
                         </div>
@@ -139,12 +140,15 @@ export default function Hero() {
                             </p>
                             
                             {/* --- BUTTON WITH SCROLL FUNCTION --- */}
+                         <Link href={"collection"}>
                             <button
-                                onClick={handleScrollDown}
+                                // onClick={handleScrollDown}
+                                
                                 className="inline-block bg-[#666141] mt-3 text-[#FFFEF5] p-3.5 rounded-full text-sm font-medium hover:bg-[#555135] transition-colors shadow-md cursor-pointer"
                             >
                                 Discover Our Artisans →
                             </button>
+                            </Link>
                         </div>
 
                         <div className="h-32 lg:h-44 overflow-hidden relative transition duration-500">

@@ -1,5 +1,44 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/products',
+        destination: '/collection',
+        permanent: true,
+      },
+      {
+        source: '/products/:path*',
+        destination: '/collection',
+        permanent: true,
+      },
+      {
+        source: '/techniques/chikan-comp',
+        destination: '/techniques/chikan-embroidery',
+        permanent: true,
+      },
+      {
+        source: '/techniques/machine',
+        destination: '/techniques/machine-embroidery',
+        permanent: true,
+      },
+      {
+        source: '/collection/classic',
+        destination: '/collection',
+        permanent: true,
+      },
+      {
+        source: '/collections/summer',
+        destination: '/collection',
+        permanent: true,
+      },
+      {
+        source: '/empowerment/impact',
+        destination: '/empowerment',
+        permanent: true,
+      },
+    ];
+  },
   // Silence the "webpack config but no turbopack config" warning
   // root points Turbopack to this frontend directory, avoiding the lockfile warning
   turbopack: {

@@ -550,32 +550,59 @@ const EmpowermentPage = () => {
                         {/* Profiles Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                            {/* We'll map through 6 dummy items to match the design */}
-                            {[1, 2, 3, 4, 5, 6].map((item) => (
-                                <div key={item} className="bg-[#FFFCEA] p-8 rounded-[20px] space-y-6">
+                            {[
+                                {
+                                    name: "Sunita Devi",
+                                    title: "Master Artisan",
+                                    quote: "Every fabric carries a story. Through my work, I feel proud to preserve traditional craftsmanship and pass these valuable skills to the next generation."
+                                },
+                                {
+                                    name: "Pooja Sharma",
+                                    title: "Weaving Specialist",
+                                    quote: "Weaving is more than a skill; it is an expression of patience and creativity. Every thread I work with brings a unique design to life."
+                                },
+                                {
+                                    name: "Meera Kumari",
+                                    title: "Quality & Finishing Specialist",
+                                    quote: "I believe that excellence comes from attention to detail. I take pride in ensuring that every finished piece reflects care, quality and dedication."
+                                },
+                                {
+                                    name: "Kavita Singh",
+                                    title: "Textile Craft Specialist",
+                                    quote: "Working with textiles allows me to express creativity every day. I enjoy combining traditional techniques with fresh ideas to create something special."
+                                },
+                                {
+                                    name: "Nisha Choudhary",
+                                    title: "Embroidery Specialist",
+                                    quote: "Every stitch adds beauty and character to a fabric. My work allows me to contribute my skills and celebrate the art of handmade craftsmanship."
+                                },
+                                {
+                                    name: "Anjali Kumari",
+                                    title: "Production Team Member",
+                                    quote: "Teamwork makes every achievement possible. Working together, sharing knowledge and learning new skills makes our workplace stronger every day."
+                                },
+                            ].map((artisan, index) => (
+                                <div key={index} className="bg-[#FFFCEA] p-8 rounded-[20px] space-y-6">
 
-                                    {/* Profile Image Placeholder */}
-                                    <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 border border-[#666141]/10">
-                                        <img
-                                            src="" // Empty as requested
-                                            alt="profile pic"
-                                            fill
-                                            className="object-cover"
-                                        />
+                                    {/* Profile Initial Avatar */}
+                                    <div className="w-20 h-20 rounded-full bg-[#666141]/10 border border-[#666141]/20 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-[#666141] text-2xl font-normal">
+                                            {artisan.name.charAt(0)}
+                                        </span>
                                     </div>
 
                                     {/* Quote */}
                                     <p className="text-black text-sm leading-relaxed">
-                                        "I learned this art from my grandmother. Every block tells a story, and when I press it onto fabric, I'm keeping that story alive."
+                                        "{artisan.quote}"
                                     </p>
 
                                     {/* Name & Title */}
                                     <div className="space-y-1">
                                         <h4 className="text-black text-base font-medium">
-                                            Geeta Devi
+                                            {artisan.name}
                                         </h4>
                                         <p className="text-black text-sm opacity-80">
-                                            Master Artisan • 25 years of Experience
+                                            {artisan.title}
                                         </p>
                                     </div>
 
