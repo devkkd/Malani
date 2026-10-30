@@ -23,12 +23,12 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/collection/classic',
+        source: '/collection/classics',
         destination: '/collection',
         permanent: true,
       },
       {
-        source: '/collections/summer',
+        source: '/collection/summer',
         destination: '/collection',
         permanent: true,
       },

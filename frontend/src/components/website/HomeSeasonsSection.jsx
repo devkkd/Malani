@@ -125,7 +125,7 @@ const HomeSeasonsSection = () => {
                     {/* --- Bottom CTA (Optional) --- */}
                     <div className="text-center pt-8">
                         <Link
-                            href="/seasons"
+                            href="/collection"
                             className="inline-block bg-[#666141] text-[#FFFEF5] px-10 py-4 rounded-full text-base font-medium hover:bg-[#555135] transition-colors shadow-md"
                         >
                             View All Collections →
