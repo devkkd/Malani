@@ -19,7 +19,7 @@ const neiko = localFont({
 });
 
 export const metadata = {
-  title: "Textile Manufacturer in India | Handcrafted Textiles | Malani Impex",
+  title: "Home Textile Manufacturer & Exporter in India | Malani Impex",
   description: "Leading textile manufacturer and exporter in India. Handcrafted home textiles, block print and wholesale cushion covers for retailers worldwide since 1981.",
   verification: {
     google: "NotuF9LW2OkufpgYMb2grHOFOgWYFJe3TfEhj_VltRQ",
