@@ -131,7 +131,6 @@ const HomeSeasonsSection = () => {
                             View All Collections →
                         </Link>
                     </div>
-
                 </div>
             </Container>
         </section>
