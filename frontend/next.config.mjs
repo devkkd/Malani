@@ -37,6 +37,12 @@ const nextConfig = {
         destination: '/empowerment',
         permanent: true,
       },
+      // Old blog URLs → new category/language/slug structure
+      {
+        source: '/blog/:slug',
+        destination: '/blog/general/english/:slug',
+        permanent: true,
+      },
     ];
   },
   // Silence the "webpack config but no turbopack config" warning

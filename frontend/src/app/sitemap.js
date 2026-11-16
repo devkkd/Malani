@@ -1,9 +1,15 @@
 const BASE = 'https://www.malaniimpexinc.com';
-const API  = process.env.NEXT_PUBLIC_API_URL;
+// Production API runs on the same domain under /api
+const API  = process.env.NODE_ENV === 'production'
+  ? 'https://www.malaniimpexinc.com/api'
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api');
 
 async function fetchBlogs() {
   try {
-    const res = await fetch(`${API}/blogs?limit=200`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API}/blogs?limit=200`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return [];
     const data = await res.json();
     return data.success ? data.data : [];
   } catch {

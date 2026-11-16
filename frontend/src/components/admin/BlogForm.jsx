@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -30,7 +30,10 @@ const EMPTY_FORM = {
   content: "",
   author: "Malani Impex",
   tags: [],
-  category: "",
+  techniqueCategory: "",
+  techniqueCategorySlug: "general",
+  techniqueCategoryName: "",
+  language: "english",
   readTime: 5,
   featured: false,
   active: true,
@@ -49,6 +52,16 @@ const EMPTY_FORM = {
 export default function BlogForm({ initialData = null, blogId = null }) {
   const router = useRouter();
   const isEditing = !!blogId;
+
+  const [techniques, setTechniques] = useState([]);
+
+  // Fetch techniques for category dropdown
+  useEffect(() => {
+    fetch(`${API}/techniques`)
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setTechniques(d.data); })
+      .catch(() => {});
+  }, []);
 
   const [form, setForm] = useState(
     initialData
@@ -90,7 +103,8 @@ export default function BlogForm({ initialData = null, blogId = null }) {
     setForm((p) => ({
       ...p,
       content: val,
-      readTime: estimateReadTime(val),
+      // Only auto-update readTime if user hasn't manually edited it
+      readTime: p._readTimeManual ? p.readTime : estimateReadTime(val),
     }));
   };
 
@@ -372,13 +386,10 @@ export default function BlogForm({ initialData = null, blogId = null }) {
                 className="w-full border border-[#666141]/20 rounded px-4 py-3 text-black bg-white focus:outline-none focus:border-[#666141] resize-y font-mono text-sm"
                 required
               />
-              <p className="text-xs text-black/40 mt-1">
-                Estimated read time: {form.readTime} min
-              </p>
             </div>
 
-            {/* Row: Author + Category + Published Date */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Row: Author + Technique Category + Language + Published Date + Read Time */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
                 <label className="block text-sm font-medium text-black mb-1.5">Author</label>
                 <input
@@ -388,16 +399,53 @@ export default function BlogForm({ initialData = null, blogId = null }) {
                   className="w-full border border-[#666141]/20 rounded px-3 py-2.5 text-sm text-black bg-white focus:outline-none focus:border-[#666141]"
                 />
               </div>
+
+              {/* Technique Category */}
               <div>
-                <label className="block text-sm font-medium text-black mb-1.5">Category</label>
-                <input
-                  type="text"
-                  value={form.category}
-                  onChange={(e) => set("category", e.target.value)}
-                  placeholder="e.g. Craftsmanship"
+                <label className="block text-sm font-medium text-black mb-1.5">
+                  Technique Category
+                </label>
+                <select
+                  value={form.techniqueCategory || ""}
+                  onChange={(e) => {
+                    const selected = techniques.find((t) => t._id === e.target.value);
+                    setForm((p) => ({
+                      ...p,
+                      techniqueCategory:     e.target.value || "",
+                      techniqueCategorySlug: selected?.slug || "general",
+                      techniqueCategoryName: selected?.name || "",
+                    }));
+                  }}
                   className="w-full border border-[#666141]/20 rounded px-3 py-2.5 text-sm text-black bg-white focus:outline-none focus:border-[#666141]"
-                />
+                >
+                  <option value="">General</option>
+                  {techniques.map((t) => (
+                    <option key={t._id} value={t._id}>{t.name}</option>
+                  ))}
+                </select>
+                {form.techniqueCategorySlug && (
+                  <p className="text-[10px] text-black/30 mt-1">
+                    URL slug: {form.techniqueCategorySlug}
+                  </p>
+                )}
               </div>
+
+              {/* Language */}
+              <div>
+                <label className="block text-sm font-medium text-black mb-1.5">Language</label>
+                <select
+                  value={form.language}
+                  onChange={(e) => set("language", e.target.value)}
+                  className="w-full border border-[#666141]/20 rounded px-3 py-2.5 text-sm text-black bg-white focus:outline-none focus:border-[#666141]"
+                >
+                  {["english","hindi","french","german","spanish","italian","portuguese","arabic","japanese","chinese"].map((lang) => (
+                    <option key={lang} value={lang} className="capitalize">
+                      {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-black mb-1.5">Publish Date</label>
                 <input
@@ -406,6 +454,31 @@ export default function BlogForm({ initialData = null, blogId = null }) {
                   onChange={(e) => set("publishedAt", e.target.value)}
                   className="w-full border border-[#666141]/20 rounded px-3 py-2.5 text-sm text-black bg-white focus:outline-none focus:border-[#666141]"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-black mb-1.5">
+                  Read Time <span className="text-black/40 font-normal">(min)</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min={1}
+                    max={120}
+                    value={form.readTime}
+                    onChange={(e) => {
+                      const val = Math.max(1, parseInt(e.target.value) || 1);
+                      setForm((p) => ({ ...p, readTime: val, _readTimeManual: true }));
+                    }}
+                    className="w-full border border-[#666141]/20 rounded px-3 py-2.5 text-sm text-black bg-white focus:outline-none focus:border-[#666141] pr-14"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-black/40 pointer-events-none">
+                    min
+                  </span>
+                </div>
+                <p className="text-[10px] text-black/30 mt-1">
+                  Auto: {estimateReadTime(form.content)} min from content
+                </p>
               </div>
             </div>
 
@@ -530,20 +603,23 @@ export default function BlogForm({ initialData = null, blogId = null }) {
                 Meta Description
                 <span
                   className={`ml-2 text-xs font-normal ${
-                    descLen > 150 ? "text-red-500" : "text-black/40"
+                    descLen > 160 ? "text-orange-500" : "text-black/40"
                   }`}
                 >
-                  {descLen}/160
+                  {descLen}/500
                 </span>
               </label>
               <textarea
                 value={form.seo.metaDescription}
                 onChange={(e) => setSeo("metaDescription", e.target.value)}
-                placeholder="SEO description (150–160 chars ideal)"
-                rows={3}
-                maxLength={160}
+                placeholder="SEO description (150–160 chars is Google's visible limit, up to 500 chars stored)"
+                rows={4}
+                maxLength={500}
                 className="w-full border border-[#666141]/20 rounded px-4 py-2.5 text-black bg-white focus:outline-none focus:border-[#666141] resize-none text-sm"
               />
+              <p className="text-[10px] text-black/30 mt-1">
+                Google shows ~155–160 chars in search results. You can store more for other uses.
+              </p>
             </div>
 
             {/* Keywords */}

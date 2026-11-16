@@ -1,22 +1,25 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import BlogForm from "@/components/admin/BlogForm";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function EditBlogPage({ params }) {
+  const { id } = use(params);
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) return;
     const fetchBlog = async () => {
       try {
         const token = localStorage.getItem("adminToken");
-        const res = await fetch(`${API}/blogs/admin/${params.id}`, {
+        const res = await fetch(`${API}/blogs/admin/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
         if (data.success) setBlog(data.data);
+        else console.error("API error:", data.message);
       } catch (err) {
         console.error("Failed to fetch blog:", err);
       } finally {
@@ -24,7 +27,7 @@ export default function EditBlogPage({ params }) {
       }
     };
     fetchBlog();
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -40,5 +43,5 @@ export default function EditBlogPage({ params }) {
     );
   }
 
-  return <BlogForm initialData={blog} blogId={params.id} />;
+  return <BlogForm initialData={blog} blogId={id} />;
 }

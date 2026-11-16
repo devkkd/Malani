@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 
+const LANGUAGES = [
+  'english', 'hindi', 'french', 'german', 'spanish',
+  'italian', 'portuguese', 'arabic', 'japanese', 'chinese'
+];
+
 const blogSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -32,17 +37,38 @@ const blogSchema = new mongoose.Schema({
     trim: true,
     default: 'Malani Impex'
   },
-  tags: [{
+  tags: [{ type: String, trim: true }],
+
+  // Technique-based category (ref to Technique model)
+  techniqueCategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Technique',
+    default: null
+  },
+  // Technique slug — stored separately for fast URL building without populate
+  techniqueCategorySlug: {
     type: String,
-    trim: true
-  }],
-  category: {
+    trim: true,
+    lowercase: true,
+    default: 'general'
+  },
+  techniqueCategoryName: {
     type: String,
     trim: true,
     default: ''
   },
+
+  // Language
+  language: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    enum: LANGUAGES,
+    default: 'english'
+  },
+
   readTime: {
-    type: Number,   // minutes
+    type: Number,
     default: 5
   },
   featured: {
@@ -53,36 +79,17 @@ const blogSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+
   // Full SEO fields
   seo: {
-    metaTitle: {
-      type: String,
-      trim: true,
-      maxlength: [70, 'Meta title cannot exceed 70 characters']
-    },
-    metaDescription: {
-      type: String,
-      trim: true,
-      maxlength: [160, 'Meta description cannot exceed 160 characters']
-    },
-    keywords: [{
-      type: String,
-      trim: true
-    }],
-    // JSON-LD schema markup (stored as string, rendered in page head)
-    schemaMarkup: {
-      type: String,
-      default: ''
-    },
-    canonicalUrl: {
-      type: String,
-      trim: true
-    },
-    ogImage: {
-      type: String,
-      trim: true
-    }
+    metaTitle:       { type: String, trim: true, maxlength: [70, 'Meta title cannot exceed 70 characters'] },
+    metaDescription: { type: String, trim: true, maxlength: [500, 'Meta description cannot exceed 500 characters'] },
+    keywords:        [{ type: String, trim: true }],
+    schemaMarkup:    { type: String, default: '' },
+    canonicalUrl:    { type: String, trim: true },
+    ogImage:         { type: String, trim: true }
   },
+
   publishedAt: {
     type: Date,
     default: Date.now
@@ -91,11 +98,12 @@ const blogSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Full-text search index
+// Indexes
 blogSchema.index({ title: 'text', content: 'text', tags: 'text' });
-// Performance indexes
 blogSchema.index({ slug: 1 }, { unique: true });
 blogSchema.index({ active: 1, featured: -1, publishedAt: -1 });
-blogSchema.index({ tags: 1 });
+blogSchema.index({ techniqueCategorySlug: 1, language: 1 });
+blogSchema.index({ language: 1 });
+blogSchema.index({ techniqueCategory: 1 });
 
 export default mongoose.model('Blog', blogSchema);

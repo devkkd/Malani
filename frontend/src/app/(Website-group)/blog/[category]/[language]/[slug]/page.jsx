@@ -2,27 +2,26 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { use } from "react";
 import Container from "@/components/website/Container";
-import { Clock, ArrowLeft, Tag, BookOpen } from "lucide-react";
+import { Clock, ArrowLeft, Tag, BookOpen, Globe, Layers } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export default function BlogPostPage() {
-  const { slug } = useParams();
-  const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default function BlogPostPage({ params }) {
+  const { slug, category, language } = use(params);
+  const [blog,     setBlog]     = useState(null);
+  const [loading,  setLoading]  = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`${API}/blogs/${slug}`);
+        const res  = await fetch(`${API}/blogs/${slug}`);
         const data = await res.json();
         if (data.success && data.data) {
           setBlog(data.data);
-          // Inject JSON-LD schema into <head>
           injectSchema(data.data);
         } else {
           setNotFound(true);
@@ -37,7 +36,6 @@ export default function BlogPostPage() {
     fetchBlog();
   }, [slug]);
 
-  // Inject JSON-LD into document head
   const injectSchema = (b) => {
     const existing = document.getElementById("blog-jsonld");
     if (existing) existing.remove();
@@ -50,6 +48,7 @@ export default function BlogPostPage() {
           headline: b.title,
           description: b.seo?.metaDescription || b.excerpt || "",
           image: b.coverImage?.url || "",
+          inLanguage: b.language || "english",
           author: {
             "@type": "Organization",
             name: b.author || "Malani Impex",
@@ -67,23 +66,23 @@ export default function BlogPostPage() {
           dateModified: b.updatedAt,
           mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `https://www.malaniimpexinc.com/blog/${b.slug}`,
+            "@id": `https://www.malaniimpexinc.com/blog/${b.techniqueCategorySlug || "general"}/${b.language || "english"}/${b.slug}`,
           },
           keywords: (b.seo?.keywords || b.tags || []).join(", "),
+          about: b.techniqueCategoryName
+            ? { "@type": "Thing", name: b.techniqueCategoryName }
+            : undefined,
         });
 
     const script = document.createElement("script");
-    script.id = "blog-jsonld";
-    script.type = "application/ld+json";
-    script.text = schema;
+    script.id    = "blog-jsonld";
+    script.type  = "application/ld+json";
+    script.text  = schema;
     document.head.appendChild(script);
 
-    // Also update page title and meta description dynamically
     document.title = `${b.seo?.metaTitle || b.title} – Malani Impex`;
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", b.seo?.metaDescription || b.excerpt || "");
-    }
+    if (metaDesc) metaDesc.setAttribute("content", b.seo?.metaDescription || b.excerpt || "");
   };
 
   if (loading) {
@@ -106,9 +105,7 @@ export default function BlogPostPage() {
           <div className="text-center py-32">
             <BookOpen size={48} className="text-[#666141]/30 mx-auto mb-4" />
             <h1 className="text-2xl text-black mb-4">Post not found</h1>
-            <Link href="/blog" className="text-[#666141] hover:underline">
-              ← Back to Blog
-            </Link>
+            <Link href="/blog" className="text-[#666141] hover:underline">← Back to Blog</Link>
           </div>
         </Container>
       </section>
@@ -116,40 +113,66 @@ export default function BlogPostPage() {
   }
 
   const formattedDate = new Date(blog.publishedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    year: "numeric", month: "long", day: "numeric",
   });
 
   return (
     <article className="w-full bg-[#FFFEF5] py-12 px-4 md:px-8">
       <Container>
-        {/* ── Back Link ── */}
-        <div className="mb-8">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-[#666141] hover:underline"
-          >
-            <ArrowLeft size={15} />
-            Back to Blog
+        {/* ── Back + Breadcrumb ── */}
+        <div className="mb-8 flex flex-wrap items-center gap-2 text-sm text-black/40">
+          <Link href="/blog" className="flex items-center gap-1.5 text-[#666141] hover:underline">
+            <ArrowLeft size={14} /> Blog
           </Link>
+          {blog.techniqueCategoryName && (
+            <>
+              <span>/</span>
+              <Link
+                href={`/blog?category=${blog.techniqueCategorySlug}`}
+                className="hover:text-[#666141] capitalize"
+              >
+                {blog.techniqueCategoryName}
+              </Link>
+            </>
+          )}
+          {blog.language && (
+            <>
+              <span>/</span>
+              <Link
+                href={`/blog?language=${blog.language}`}
+                className="hover:text-[#666141] capitalize"
+              >
+                {blog.language}
+              </Link>
+            </>
+          )}
         </div>
 
         <div className="max-w-3xl mx-auto">
-          {/* ── Tags ── */}
-          {blog.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {blog.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="flex items-center gap-1 text-xs text-[#666141] border border-[#666141]/30 px-3 py-1 rounded-full"
-                >
-                  <Tag size={10} />
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* ── Category + Language badges ── */}
+          <div className="flex flex-wrap gap-2 mb-5">
+            {blog.techniqueCategoryName && (
+              <Link
+                href={`/blog?category=${blog.techniqueCategorySlug}`}
+                className="flex items-center gap-1 text-xs text-[#666141] border border-[#666141]/30 px-3 py-1 rounded-full hover:bg-[#666141] hover:text-[#FFFEF5] transition-colors"
+              >
+                <Layers size={10} /> {blog.techniqueCategoryName}
+              </Link>
+            )}
+            {blog.language && (
+              <Link
+                href={`/blog?language=${blog.language}`}
+                className="flex items-center gap-1 text-xs text-black/50 border border-black/10 px-3 py-1 rounded-full capitalize hover:bg-black/5 transition-colors"
+              >
+                <Globe size={10} /> {blog.language}
+              </Link>
+            )}
+            {/* {(blog.tags || []).slice(0, 2).map((tag) => (
+              <span key={tag} className="flex items-center gap-1 text-xs text-[#666141] border border-[#666141]/20 px-3 py-1 rounded-full">
+                <Tag size={10} /> {tag}
+              </span>
+            ))} */}
+          </div>
 
           {/* ── Title ── */}
           <h1 className="text-3xl md:text-4xl lg:text-5xl text-black leading-tight mb-6">
@@ -158,13 +181,10 @@ export default function BlogPostPage() {
 
           {/* ── Meta Row ── */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-black/50 mb-10 pb-6 border-b border-[#666141]/10">
-            <span className="font-medium text-[#666141]">
-              {blog.author || "Malani Impex"}
-            </span>
+            <span className="font-medium text-[#666141]">{blog.author || "Malani Impex"}</span>
             <span>{formattedDate}</span>
             <span className="flex items-center gap-1.5">
-              <Clock size={13} />
-              {blog.readTime || 5} min read
+              <Clock size={13} /> {blog.readTime || 5} min read
             </span>
           </div>
 
@@ -213,9 +233,7 @@ export default function BlogPostPage() {
 
           {/* ── CTA ── */}
           <div className="mt-14 p-8 bg-[#666141] text-[#FFFEF5] rounded-sm text-center space-y-4">
-            <p className="text-xl font-normal">
-              Interested in our handcrafted collections?
-            </p>
+            <p className="text-xl font-normal">Interested in our handcrafted collections?</p>
             <Link
               href="/collection"
               className="inline-block border border-[#FFFEF5]/60 text-[#FFFEF5] px-8 py-3 rounded-full text-sm font-medium hover:bg-[#FFFEF5] hover:text-[#666141] transition-colors"
