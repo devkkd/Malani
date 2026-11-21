@@ -17,8 +17,21 @@ async function fetchBlogs() {
   }
 }
 
+async function fetchTechniques() {
+  try {
+    const res = await fetch(`${API}/techniques`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.success ? data.data : [];
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap() {
-  const lastmod = '2026-08-26T00:00:00.000Z';
+  const lastmod = new Date().toISOString();
 
   const staticRoutes = [
     { url: `${BASE}/`,            changeFrequency: 'daily',   priority: 1.0 },
@@ -37,14 +50,23 @@ export default async function sitemap() {
     { url: `${BASE}/contact`,     changeFrequency: 'monthly', priority: 0.7 },
   ].map((r) => ({ ...r, lastModified: lastmod }));
 
+  // Dynamic technique URLs
+  const techniques = await fetchTechniques();
+  const techniqueRoutes = techniques.map((tech) => ({
+    url: `${BASE}/techniques/${tech.slug}`,
+    lastModified: tech.updatedAt || tech.createdAt || lastmod,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
   // Dynamic blog post URLs
   const blogs = await fetchBlogs();
   const blogRoutes = blogs.map((blog) => ({
-    url: `${BASE}/blog/${blog.slug}`,
+    url: `${BASE}/blog/${blog.techniqueCategorySlug || 'general'}/${blog.language || 'english'}/${blog.slug}`,
     lastModified: blog.updatedAt || blog.publishedAt || lastmod,
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...blogRoutes];
+  return [...staticRoutes, ...techniqueRoutes, ...blogRoutes];
 }

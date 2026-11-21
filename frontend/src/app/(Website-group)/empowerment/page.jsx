@@ -25,9 +25,7 @@ const EmpowermentPage = () => {
 
                         <div className="max-w-4xl mx-auto pt-8">
                             <p className="text-black text-sm md:text-base leading-relaxed">
-                                At Malani Impex, women's empowerment isn't merely a value it is the very heart of everything we do.
-                                For over four decades, we have been deeply honored to create meaningful opportunities for women artisans to achieve financial independence, break cycles of poverty, and emerge as respected leaders in their communities.
-                                Every purchase you make directly supports a woman artisan's inspiring journey toward dignity, independence, and genuine hope.
+                                At Malani Impex, we believe in women's empowerment; for over four decades, we have created opportunities for women artisans in India so they can earn their own money, escape poverty, and become respected leaders in their communities. Every purchase makes a direct contribution to a woman artisan's journey of hope, dignity and independence.
                             </p>
                         </div>
                     </div>
@@ -45,16 +43,16 @@ const EmpowermentPage = () => {
 
                         <div className="max-w-3xl space-y-1">
                             <p className="text-black text-sm md:text-base leading-relaxed">
-                                Step into the world of our remarkable artisans.
+                               Step into the world of our remarkable women artisans.
                             </p>
                             <p className="text-black text-sm md:text-base leading-relaxed">
-                                Through this visual journey, you'll witness the extraordinary skill, unwavering dedication, and breathtaking artistry that goes into every single piece we create.
+                          You will see the skill, dedication, and amazing art in every piece through this visual journey.
                             </p>
                             <p className="text-black text-sm md:text-base leading-relaxed">
-                                This isn't just manufacturing it's mastery.
+                               This is not just manufacturing. It is mastery.
                             </p>
                             <p className="text-black text-sm md:text-base leading-relaxed">
-                                These aren't just workers they're artists, breadwinners, community leaders, and guardians of ancient traditions.
+                               These are not just workers. They are artists, breadwinners, community leaders, and guardians of ancient traditions.
                             </p>
                         </div>
 
@@ -126,7 +124,7 @@ const EmpowermentPage = () => {
                                         Celebrating Women Artisans, Stitch by Stitch
                                     </h2>
                                     <p className="text-black text-sm md:text-base leading-relaxed pt-2">
-                                        Over 90% of our artisans are women who are the primary breadwinners for their families. By preserving traditional crafts, we're not just keeping heritage alive we're building futures, transforming communities, and proving that economic empowerment and cultural preservation can flourish together.
+                                       Over 90% of our artisans are female, and they are the only earning members of their families. Our main motto isn’t just to protect our heritage, but also to keep traditional crafts alive. We are building futures, changing communities, and showing that economic empowerment and cultural preservation can grow together.
                                     </p>
                                 </div>
                             </div>

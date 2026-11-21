@@ -213,15 +213,16 @@ const AboutPage = () => {
 
                             <div className="space-y-6 max-w-4xl mx-auto">
                                 <p className="text-black text-sm md:text-base leading-relaxed">
-                                    In 1981, the Malani family founded a modest textile atelier with an inspiring vision: to preserve India's magnificent artisan traditions while creating dignified, sustainable livelihoods.
+                                  Malani family established the best sustainable textile manufacturers in Jaipur in 1981. Their vision is to preserve India’s magnificent artisan traditions while creating dignified, sustainable livelihoods.
                                 </p>
 
                                 <p className="text-black text-sm md:text-base leading-relaxed">
-                                    What began as a cherished family endeavor has flourished into a meaningful movement empowering over 2,000 skilled artisans, particularly women, throughout India.
+                                   Starting out as a beloved family project, the idea of Malani has evolved into a strong opportunity for more than 2000 artisans, especially women, working across the length and breadth of India.
+
                                 </p>
 
                                 <p className="text-black text-sm md:text-base leading-relaxed">
-                                    Today, Malani Impex stands proudly as a distinguished women-led, family-owned enterprise that gracefully bridges ancient craftsmanship with contemporary ethical excellence.
+                                   Currently, Malani Impex has established itself as a noteworthy family-owned business with women in the textile company in Jaipur and is one of the pioneers in the production of sustainable textile products.
                                 </p>
                             </div>
                         </div>
@@ -291,13 +292,15 @@ const AboutPage = () => {
 
                                     <div className="space-y-6 text-black text-sm md:text-base leading-relaxed">
                                         <p>
-                                            For over 43 years, MALANI IMPEX INC has been the bridge between Jaipur's master artisans and homes across 50+ countries.
+                                           Malani Impex INC has been a great home textile manufacturer for over 43 years and a bridge between Jaipur’s master artisans and homes across 50+ countries.
+
                                         </p>
                                         <p>
-                                            What began in 1981 as a single workshop has blossomed into a thriving community of 200+ craftspeople - predominantly women - keeping India's textile heritage alive through every stitch, print, and weave.
+                                           Initiated in 1981, this project has matured into a team comprising more than 200 artisans, mainly women, who contribute their services to the preservation of India’s textile heritage through the art of stitching, printing, and weaving.
+
                                         </p>
                                         <p>
-                                            From intricately embroidered cushion covers to hand-block-printed throws, from traditional poufs to contemporary upholstered furniture, each piece carries the soul of Rajasthan's rich artistic legacy. We don't just export products; we share stories woven in thread, printed in tradition, and crafted with pride.
+                                           From hand-printed throws to beautifully crafted cushion covers and modern upholstered furniture, every product showcases Rajasthan’s culture and mesmerising art. We not only export products but also share the story of our traditions and the skills of artisans through every handmade item.
                                         </p>
                                     </div>
                                 </div>

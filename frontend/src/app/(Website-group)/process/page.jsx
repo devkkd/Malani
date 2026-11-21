@@ -11,7 +11,15 @@ const ProcessPage = () => {
       image: '/images/process/p1.png',
       heading: 'Premium quality materials sourced responsibly',
       description:
-        'We begin with the finest fabrics organic cotton, natural fibers, and premium textiles sourced from ethical suppliers. Every material choice reflects our commitment to quality and environmental responsibility.',
+        'It begins with better fabrics, such as organic cotton cloth, natural fibers and luxury fabrics from ethical companies. The fabrics we use are a testament to our concern for the environment and our commitment to quality.',
+        subHeading: 'What Happens Here',
+      checklist: [
+          'Organic cotton fabric',
+         'Natural fibres',
+          'Luxury fabrics',
+          'Suppliers of Ethics',
+          'Eco-friendly  and good quality choices',
+      ],
     },
     {
       id: 2,
@@ -20,7 +28,15 @@ const ProcessPage = () => {
       image: '/images/process/p2.png',
       heading: 'Traditional patterns adapted with modern sensibilities',
       description:
-        'Our design team many of them women artisans themselves create patterns that honor centuries-old motifs while meeting contemporary aesthetic needs. Each design carries cultural significance and artistic integrity.',
+        'Design is the second most important step in our textile manufacturing process. Our design team has women who create patterns that respect centuries-old motifs and cater to contemporary tastes. Each design has cultural meaning and artistic integrity.',
+         subHeading: "What's Going on Here",
+      checklist: [
+        'Study of motifs centuries old',
+        'New designs for modern tastes',
+        'Designs created by our team.',
+        'Women artisans in design team',
+        'Cultural meaning in every design',
+      ],
     },
     // --- UPDATED STEP 3 ---
     {

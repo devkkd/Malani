@@ -68,6 +68,11 @@ export default function BlogForm({ initialData = null, blogId = null }) {
       ? {
           ...EMPTY_FORM,
           ...initialData,
+          techniqueCategory: initialData.techniqueCategory
+            ? (typeof initialData.techniqueCategory === "object"
+                ? initialData.techniqueCategory._id
+                : initialData.techniqueCategory)
+            : "",
           tags: initialData.tags || [],
           publishedAt: initialData.publishedAt
             ? new Date(initialData.publishedAt).toISOString().slice(0, 10)
@@ -193,16 +198,22 @@ export default function BlogForm({ initialData = null, blogId = null }) {
       const url = isEditing ? `${API}/blogs/${blogId}` : `${API}/blogs`;
       const method = isEditing ? "PUT" : "POST";
 
+      const payload = {
+        ...form,
+        techniqueCategory: form.techniqueCategory ? form.techniqueCategory : null,
+        publishedAt: form.publishedAt
+          ? new Date(form.publishedAt).toISOString()
+          : new Date().toISOString(),
+      };
+      delete payload._readTimeManual;
+
       const res = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          ...form,
-          publishedAt: new Date(form.publishedAt).toISOString(),
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -210,10 +221,14 @@ export default function BlogForm({ initialData = null, blogId = null }) {
         toast.success(isEditing ? "Blog updated!" : "Blog created!");
         router.push("/admin/blogs");
       } else {
-        toast.error(data.message || "Save failed");
+        const errorMsg = data.errors && data.errors.length > 0
+          ? data.errors.map((err) => err.message).join(", ")
+          : (data.message || "Save failed");
+        toast.error(errorMsg);
       }
-    } catch {
-      toast.error("Save failed");
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error("Save failed. Please check your network connection.");
     } finally {
       setSaving(false);
     }

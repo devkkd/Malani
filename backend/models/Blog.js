@@ -43,7 +43,8 @@ const blogSchema = new mongoose.Schema({
   techniqueCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Technique',
-    default: null
+    default: null,
+    set: v => (v === '' || !v ? null : v)
   },
   // Technique slug — stored separately for fast URL building without populate
   techniqueCategorySlug: {
@@ -96,6 +97,22 @@ const blogSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+// Auto-generate slug if missing and clean up empty techniqueCategory
+blogSchema.pre('validate', function(next) {
+  if (this.techniqueCategory === '') {
+    this.techniqueCategory = null;
+  }
+  if (!this.slug && this.title) {
+    this.slug = this.title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+  next();
 });
 
 // Indexes

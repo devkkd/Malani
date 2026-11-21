@@ -56,15 +56,13 @@ const EthicalFoundation = () => {
           </h2>
           <div className="max-w-4xl mx-auto pt-2 space-y-2 text-black text-sm md:text-base leading-relaxed opacity-90">
             <p>
-              At Malani Impex, ethical excellence isn't negotiable it's the very
-              foundation upon which we stand.
+              At Malani Impex, ethical sourcing and fair practices are important for us, not a choice. This is how our company is built.
             </p>
             <p>
-              Since 1981, we've built our entire enterprise on unwavering
-              commitments to artisan dignity, environmental stewardship, and
-              complete transparency.
+             In 1981, when we started our business, we made three important promises - 
+respect for our artisans, care for the environment, and full transparency.
             </p>
-            <p>Here's exactly what that means:</p>
+            <p>Here is exactly what that means:</p>
           </div>
         </div>
 

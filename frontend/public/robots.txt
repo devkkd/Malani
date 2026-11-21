@@ -4,6 +4,11 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /_next/static/media/
+Disallow: /*.otf$
+Disallow: /*.woff$
+Disallow: /*.woff2$
+Disallow: /*.ttf$
 
 # Google
 User-agent: Googlebot
@@ -11,6 +16,11 @@ User-agent: Googlebot-Image
 User-agent: Google-Extended
 Allow: /
 Disallow: /admin/
+Disallow: /_next/static/media/
+Disallow: /*.otf$
+Disallow: /*.woff$
+Disallow: /*.woff2$
+Disallow: /*.ttf$
 
 # ChatGPT (OpenAI)
 User-agent: GPTBot
@@ -18,6 +28,7 @@ User-agent: ChatGPT-User
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /admin/
+Disallow: /_next/static/media/
 
 # Claude (Anthropic)
 User-agent: ClaudeBot
@@ -26,12 +37,14 @@ User-agent: Claude-SearchBot
 User-agent: anthropic-ai
 Allow: /
 Disallow: /admin/
+Disallow: /_next/static/media/
 
 # Perplexity
 User-agent: PerplexityBot
 User-agent: Perplexity-User
 Allow: /
 Disallow: /admin/
+Disallow: /_next/static/media/
 
 # Sitemap
 Sitemap: https://www.malaniimpexinc.com/sitemap.xml

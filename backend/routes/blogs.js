@@ -49,9 +49,34 @@ router.get('/admin/:id', protect, async (req, res) => {
 // POST create blog (Admin)
 router.post('/', protect, async (req, res) => {
   try {
-    const blog = await Blog.create(req.body);
+    const body = { ...req.body };
+    if (!body.techniqueCategory || body.techniqueCategory === '') {
+      body.techniqueCategory = null;
+    } else if (typeof body.techniqueCategory === 'object' && body.techniqueCategory._id) {
+      body.techniqueCategory = body.techniqueCategory._id;
+    }
+
+    if (!body.slug && body.title) {
+      body.slug = body.title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    delete body._readTimeManual;
+
+    const blog = await Blog.create(body);
     res.status(201).json({ success: true, data: blog });
   } catch (error) {
+    console.error('❌ Create blog error:', error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'A blog with this slug already exists. Please choose a different title or slug.'
+      });
+    }
     res.status(400).json({
       success: false,
       message: error.message,
@@ -65,10 +90,26 @@ router.post('/', protect, async (req, res) => {
 // PUT update blog (Admin)
 router.put('/:id', protect, async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const body = { ...req.body };
+    if (!body.techniqueCategory || body.techniqueCategory === '') {
+      body.techniqueCategory = null;
+    } else if (typeof body.techniqueCategory === 'object' && body.techniqueCategory._id) {
+      body.techniqueCategory = body.techniqueCategory._id;
+    }
+
+    delete body._readTimeManual;
+
+    const blog = await Blog.findByIdAndUpdate(req.params.id, body, { new: true, runValidators: true });
     if (!blog) return res.status(404).json({ success: false, message: 'Blog not found' });
     res.json({ success: true, data: blog });
   } catch (error) {
+    console.error('❌ Update blog error:', error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'A blog with this slug already exists. Please choose a different slug.'
+      });
+    }
     res.status(400).json({ success: false, message: error.message });
   }
 });

@@ -2,6 +2,17 @@
 const nextConfig = {
   async redirects() {
     return [
+      // Typo redirects: /techniquess → /techniques
+      {
+        source: '/techniquess',
+        destination: '/techniques',
+        permanent: true,
+      },
+      {
+        source: '/techniquess/:path*',
+        destination: '/techniques/:path*',
+        permanent: true,
+      },
       {
         source: '/products',
         destination: '/collection',
@@ -42,6 +53,20 @@ const nextConfig = {
         source: '/blog/:slug',
         destination: '/blog/general/english/:slug',
         permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        // Prevent search engines from indexing font files and static assets as web pages
+        source: '/_next/static/media/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow',
+          },
+        ],
       },
     ];
   },
